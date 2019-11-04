@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class DrawCards : MonoBehaviour {
 
-	[SerializeField] [Tooltip("Lowest to highest rarity. The higher the number, the higher the rarity.")] float[] RarityPerCard;
-	[SerializeField] float cardDrawCount = 100;
+	//[SerializeField] [Tooltip("Lowest to highest rarity. The higher the number, the higher the rarity.")] float[] RarityPerCard;
+	public float[] RarityPerCard;
+	[SerializeField] int cardDrawCount = 100;
 	float[] accumulatedCardRarities;
 	float raritiesTotal;
 	float randomNumber;
@@ -34,8 +35,25 @@ public class DrawCards : MonoBehaviour {
 		}
 	}
 
+	public void SetCardRarities (float Card1Star, float Card2Stars, float Card3Stars, float Card4Stars, float Card5Stars)
+	{
+		RarityPerCard[0] = Card1Star;
+		RarityPerCard[1] = Card2Stars;
+		RarityPerCard[2] = Card3Stars;
+		RarityPerCard[3] = Card4Stars;
+		RarityPerCard[4] = Card5Stars;
+	}
+
 	// Use this for initialization
-	public void DrawARarity () {
+	public int DrawARarity () {
+
+		raritiesTotal = 0;
+
+		for (int i = 0; i < RarityPerCard.Length; i++)
+		{
+			raritiesTotal += RarityPerCard[i];
+		}
+
 		accumulatedCardRarities = new float[RarityPerCard.Length];
 		randomNumber = Random.Range(0f, 1f);
 
@@ -70,7 +88,6 @@ public class DrawCards : MonoBehaviour {
 				}
 			}
 		}
-
-		print(rarity + ": " + drawnCard);
+		return rarity;
 	}
 }

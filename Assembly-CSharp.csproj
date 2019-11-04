@@ -61,11 +61,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\HouseCreator.cs" />
+    <Compile Include="Assets\Scripts\CardIndex.cs" />
+    <Compile Include="Assets\Scripts\CardManager.cs" />
     <Compile Include="Assets\Scripts\DrawCards.cs" />
+    <Compile Include="Assets\Scripts\HouseCreator.cs" />
     <Compile Include="Assets\Scripts\PackCreator.cs" />
     <Compile Include="Assets\Scripts\RoomCreator.cs" />
     <Compile Include="Assets\Scripts\Test.cs" />
+    <Compile Include="Assets\UnityLitJson\Extensions.cs" />
+    <Compile Include="Assets\UnityLitJson\IJsonWrapper.cs" />
+    <Compile Include="Assets\UnityLitJson\JsonAttribute.cs" />
+    <Compile Include="Assets\UnityLitJson\JsonData.cs" />
+    <Compile Include="Assets\UnityLitJson\JsonException.cs" />
+    <Compile Include="Assets\UnityLitJson\JsonMapper.cs" />
+    <Compile Include="Assets\UnityLitJson\JsonMockWrapper.cs" />
+    <Compile Include="Assets\UnityLitJson\JsonReader.cs" />
+    <Compile Include="Assets\UnityLitJson\JsonWriter.cs" />
+    <Compile Include="Assets\UnityLitJson\Lexer.cs" />
+    <Compile Include="Assets\UnityLitJson\ParserToken.cs" />
+    <Compile Include="Assets\UnityLitJson\Platform.cs" />
+    <Compile Include="Assets\UnityLitJson\Unity\UnityTypeBindings.cs" />
+    <Compile Include="Assets\UnityLitJson-Example\JsonExample.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/mc-tc/Documents/repos/Unity/Collections_Economy_Simulator/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
