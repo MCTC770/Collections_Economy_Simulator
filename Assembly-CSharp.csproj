@@ -61,10 +61,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\GlobalCardDrawHandler.cs" />
     <Compile Include="Assets\Scripts\CardIndex.cs" />
     <Compile Include="Assets\Scripts\CardManager.cs" />
     <Compile Include="Assets\Scripts\DrawCards.cs" />
+    <Compile Include="Assets\Scripts\GlobalCardDrawHandler.cs" />
     <Compile Include="Assets\Scripts\HouseCreator.cs" />
     <Compile Include="Assets\Scripts\PackCreator.cs" />
     <Compile Include="Assets\Scripts\RoomCreator.cs" />
