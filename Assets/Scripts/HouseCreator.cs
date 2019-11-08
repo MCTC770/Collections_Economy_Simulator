@@ -17,10 +17,25 @@ public class HouseCreator : MonoBehaviour {
 	string json;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 
 		houseCardNumberIndex = new int[houseCardRarityIndex.Length];
 
+		CreateCardIndex();
+		CreateJson();
+	}
+
+	public void ResetCardIndex()
+	{
+		for (int i = 0; i < houseCardIsCollectedIndex.Length; i++)
+		{
+			houseCardIsCollectedIndex[i] = false;
+		}
+	}
+
+	private void CreateCardIndex()
+	{
 		for (int i = 0; i < roomsInThisHouse.Length; i++)
 		{
 			roomsInThisHouse[i].SetIndexValue(totalIndexCounter);
@@ -47,7 +62,6 @@ public class HouseCreator : MonoBehaviour {
 		}
 
 		h = 0;
-		CreateJson();
 	}
 
 	void CreateJson()
@@ -79,7 +93,7 @@ public class HouseCreator : MonoBehaviour {
 			json += "}}";
 
 			System.IO.File.WriteAllText(Application.dataPath + "/CardInfo.json", json);
-			print(Application.dataPath);
+			//print(Application.dataPath);
 		}
 	}
 

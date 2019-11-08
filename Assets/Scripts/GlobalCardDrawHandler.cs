@@ -4,19 +4,25 @@ using UnityEngine;
 
 public class GlobalCardDrawHandler : MonoBehaviour {
 
+	[SerializeField] int numberOfSimulations;
 	[SerializeField] int numberOfDays;
+	public int starCounter;
 	[SerializeField] float[] setCardRarities = new float[5];
 	[SerializeField] float[] packsPerDay = new float[5];
 	[SerializeField] PackCreator[] packSelection;
 
-	//[SerializeField] PackCreator[] packsDrawn;
+	string defaultNumberOfSimulations;
+	string defaultNumberOfDays;
+	string[] defaultSetCardRarities = new string[5];
+	string[] defaultPacksPerDay = new string[5];
+
 	PackCreator[] packsForTheDay;
 	DrawCards cardDrawer;
 	CardManager cardManager;
+	HouseCreator houseCreator;
 
 	float currentCardNum;
 	int[] endNum;
-	int dayCounter;
 	bool[] packDistribution;
 
 	int[] cardsOfRarityInPack;
@@ -31,11 +37,48 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	int[] numberOfPacksForTheDay = new int[5];
 	int[] numberOfPacksForTheDayInUse;
 	string[] numberOfPacksForTheDayString;
-	[SerializeField] int[,] cardsPerDayTracker;
+	int[,] cardsPerDayTracker;
 
 	// Use this for initialization
 	void Start ()
 	{
+
+		houseCreator = FindObjectOfType<HouseCreator>();
+		cardDrawer = FindObjectOfType<DrawCards>();
+		cardManager = FindObjectOfType<CardManager>();
+
+		starCounter = 0;
+
+		defaultNumberOfSimulations = numberOfSimulations.ToString();
+		defaultNumberOfDays = numberOfDays.ToString();
+		for (int i = 0; i < setCardRarities.Length; i++)
+		{
+			defaultSetCardRarities[i] = setCardRarities[i].ToString();
+		}
+		for (int i = 0; i < packsPerDay.Length; i++)
+		{
+			defaultPacksPerDay[i] = packsPerDay[i].ToString();
+		}
+
+		InitializeValues();
+		ResetPackDistributionArray();
+	}
+
+	private void InitializeValues()
+	{
+		totalPacksThisDay = 0;
+		numberOfSimulations = int.Parse(defaultNumberOfSimulations);
+		numberOfDays = int.Parse(defaultNumberOfDays);
+		for (int i = 0; i < setCardRarities.Length; i++)
+		{
+			setCardRarities[i] = float.Parse(defaultSetCardRarities[i]);
+		}
+		for (int i = 0; i < packsPerDay.Length; i++)
+		{
+			packsPerDay[i] = float.Parse(defaultPacksPerDay[i]);
+		}
+
+		cardsPerDayTracker = null;
 		cardsPerDayTracker = new int[numberOfDays, packSelection.Length];
 		fixedPacksPerDay = new string[packsPerDay.Length];
 		for (int i = 0; i < packsPerDay.Length; i++)
@@ -43,20 +86,22 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 			fixedPacksPerDay[i] = packsPerDay[i].ToString();
 		}
 
+		houseCreator.ResetCardIndex();
+		cardManager.InitializeDuplicateStarCounter();
+		starCounter = 0;
+
 		endNum = new int[packsPerDay.Length];
+		packDistribution = null;
 		packDistribution = new bool[numberOfDays];
-		cardDrawer = FindObjectOfType<DrawCards>();
-		cardManager = FindObjectOfType<CardManager>();
 		defaultCardRarities = new float[setCardRarities.Length];
 		cardsOfRarityInPack = new int[5];
+		numberOfPacksForTheDay = new int[5];
 
 		for (int i = 0; i < setCardRarities.Length; i++)
 		{
 			defaultCardRarities[i] = setCardRarities[i];
 		}
 		GetCardValues();
-
-		ResetPackDistributionArray();
 	}
 
 	private void ResetPackDistributionArray()
@@ -76,7 +121,11 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 
 		if (Input.GetKeyDown(KeyCode.B))
 		{
-			AllocatePacksForTheDay();
+			for (int i = 0; i < numberOfSimulations; i++)
+			{
+				InitializeValues();
+				AllocatePacksForTheDay();
+			}
 		}
 	}
 
@@ -90,7 +139,6 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 
 		for (int i = 0; i < packsPerDay.Length; i++)
 		{
-			dayCounter = 0;
 
 			while (packsPerDayLeft[i] >= 1)
 			{
@@ -155,11 +203,11 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 				cardsPerDayTracker[j, i] = numberOfPacksForTheDayInUse[i];
 				if (i == 4)
 				{
-					Debug.Log("cardsPerDayTracker[" + j + ", 0]: " + cardsPerDayTracker[j, 0]);
+					/*Debug.Log("cardsPerDayTracker[" + j + ", 0]: " + cardsPerDayTracker[j, 0]);
 					Debug.Log("cardsPerDayTracker[" + j + ", 1]: " + cardsPerDayTracker[j, 1]);
 					Debug.Log("cardsPerDayTracker[" + j + ", 2]: " + cardsPerDayTracker[j, 2]);
 					Debug.Log("cardsPerDayTracker[" + j + ", 3]: " + cardsPerDayTracker[j, 3]);
-					Debug.Log("cardsPerDayTracker[" + j + ", 4]: " + cardsPerDayTracker[j, 4]);
+					Debug.Log("cardsPerDayTracker[" + j + ", 4]: " + cardsPerDayTracker[j, 4]);*/
 				}
 			}
 		}
@@ -171,6 +219,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 			for (int k = 0; k < packSelection.Length; k++)
 			{
 				totalPacksThisDay += cardsPerDayTracker[j, k];
+				//Debug.Log("cardsPerDayTracker[" + j + ", " + k + "]: " + cardsPerDayTracker[j, k]);
 			}
 
 			packsForTheDay = new PackCreator[totalPacksThisDay];
@@ -218,11 +267,11 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 			while (cardsOfRarityInPack[i] > 0)
 			{
 
-				Debug.Log("cardsOfRarityInPack[0]: " + cardsOfRarityInPack[0]);
+				/*Debug.Log("cardsOfRarityInPack[0]: " + cardsOfRarityInPack[0]);
 				Debug.Log("cardsOfRarityInPack[1]: " + cardsOfRarityInPack[1]);
 				Debug.Log("cardsOfRarityInPack[2]: " + cardsOfRarityInPack[2]);
 				Debug.Log("cardsOfRarityInPack[3]: " + cardsOfRarityInPack[3]);
-				Debug.Log("cardsOfRarityInPack[4]: " + cardsOfRarityInPack[4]);
+				Debug.Log("cardsOfRarityInPack[4]: " + cardsOfRarityInPack[4]);*/
 
 				DrawChancePerMinimumCardRarity(i);
 				rarityOfCurrentlyDrawnCard = cardDrawer.DrawARarity();
@@ -245,11 +294,11 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 
 		cardDrawer.SetCardRarities(setCardRarities[0], setCardRarities[1], setCardRarities[2], setCardRarities[3], setCardRarities[4]);
 
-		Debug.Log("setCardRarities[0]: " + setCardRarities[0]);
+		/*Debug.Log("setCardRarities[0]: " + setCardRarities[0]);
 		Debug.Log("setCardRarities[1]: " + setCardRarities[1]);
 		Debug.Log("setCardRarities[2]: " + setCardRarities[2]);
 		Debug.Log("setCardRarities[3]: " + setCardRarities[3]);
-		Debug.Log("setCardRarities[4]: " + setCardRarities[4]);
+		Debug.Log("setCardRarities[4]: " + setCardRarities[4]);*/
 
 	}
 
@@ -261,123 +310,3 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		}
 	}
 }
-
-/*using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class GlobalCardDrawHandler : MonoBehaviour {
-
-	[SerializeField] int runTimeInDays;
-	[SerializeField] float[] setCardRarities = new float[5];
-	[SerializeField] PackCreator[] packIndex = new PackCreator[5];
-	[SerializeField] float[] numberOfPacksDrawnPerTier = new float[5];
-
-	DrawCards cardDrawer;
-	CardManager cardManager;
-
-	int[] cardsOfRarityInPack;
-	float[] defaultCardRarities;
-
-	int rarityOfCurrentlyDrawnCard;
-	float totalAmountOfPacksFromCurrentRarity;
-	int dailyPacks;
-
-	// Use this for initialization
-	void Start () {
-
-		cardDrawer = FindObjectOfType<DrawCards>();
-		cardManager = FindObjectOfType<CardManager>();
-		defaultCardRarities = new float[setCardRarities.Length];
-		cardsOfRarityInPack = new int[5];
-
-		for (int i = 0; i < setCardRarities.Length; i++)
-		{
-			defaultCardRarities[i] = setCardRarities[i];
-		}
-		GetCardValues();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (Input.GetKeyDown(KeyCode.A))
-		{
-			SelectPacksIndividually();
-		}
-	}
-
-	void SelectPacksIndividually()
-	{
-		for (int i = 0; i < numberOfPacksDrawnPerTier.Length; i++)
-		{
-			cardsOfRarityInPack[0] = packIndex[i].numberOf1StarCards;
-			cardsOfRarityInPack[1] = packIndex[i].numberOf2StarCards;
-			cardsOfRarityInPack[2] = packIndex[i].numberOf3StarCards;
-			cardsOfRarityInPack[3] = packIndex[i].numberOf4StarCards;
-			cardsOfRarityInPack[4] = packIndex[i].numberOf5StarCards;
-
-			while (numberOfPacksDrawnPerTier[i] >= 1)
-			{
-				dailyPacks = 1;
-				DrawCardsInCurrentPack();
-				numberOfPacksDrawnPerTier[i] -= 1;
-			}
-
-			totalAmountOfPacksFromCurrentRarity = numberOfPacksDrawnPerTier[i] * runTimeInDays;
-			//TODO: If number is a float, define by chance if the remaining rarity results in pack (e.g. 20.5 should be 20 guaranteed + 50% chance for a 21st) 
-			//TODO: Distribute number accross days evenly. If number is a float, distribute remaining cards evenly
-
-			DrawCardsInCurrentPack();
-		}
-	}
-
-	void DrawCardsInCurrentPack()
-	{
-		for (int i = 0; i < cardsOfRarityInPack.Length; i++)
-		{
-			while (cardsOfRarityInPack[i] > 0)
-			{
-
-				Debug.Log("cardsOfRarityInPack[0]: " + cardsOfRarityInPack[0]);
-				Debug.Log("cardsOfRarityInPack[1]: " + cardsOfRarityInPack[1]);
-				Debug.Log("cardsOfRarityInPack[2]: " + cardsOfRarityInPack[2]);
-				Debug.Log("cardsOfRarityInPack[3]: " + cardsOfRarityInPack[3]);
-				Debug.Log("cardsOfRarityInPack[4]: " + cardsOfRarityInPack[4]);
-
-				DrawChancePerMinimumCardRarity(i);
-				rarityOfCurrentlyDrawnCard = cardDrawer.DrawARarity();
-				cardManager.DrawCardFromIndexBasedOnRarity(rarityOfCurrentlyDrawnCard);
-				cardsOfRarityInPack[i] -= 1;
-			}
-		}
-	}
-
-	void DrawChancePerMinimumCardRarity(int rarity)
-	{
-		GetCardValues();
-		for (int k = 0; k < setCardRarities.Length; k++)
-		{
-			if (rarity > k)
-			{
-				setCardRarities[k] = 0;
-			}
-		}
-
-		cardDrawer.SetCardRarities(setCardRarities[0], setCardRarities[1], setCardRarities[2], setCardRarities[3], setCardRarities[4]);
-
-		Debug.Log("setCardRarities[0]: " + setCardRarities[0]);
-		Debug.Log("setCardRarities[1]: " + setCardRarities[1]);
-		Debug.Log("setCardRarities[2]: " + setCardRarities[2]);
-		Debug.Log("setCardRarities[3]: " + setCardRarities[3]);
-		Debug.Log("setCardRarities[4]: " + setCardRarities[4]);
-
-	}
-
-	private void GetCardValues()
-	{
-		for (int i = 0; i < setCardRarities.Length; i++)
-		{
-			setCardRarities[i] = defaultCardRarities[i];
-		}
-	}
-}*/

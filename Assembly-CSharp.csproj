@@ -68,7 +68,6 @@
     <Compile Include="Assets\Scripts\HouseCreator.cs" />
     <Compile Include="Assets\Scripts\PackCreator.cs" />
     <Compile Include="Assets\Scripts\RoomCreator.cs" />
-    <Compile Include="Assets\Scripts\Test.cs" />
     <Compile Include="Assets\UnityLitJson\Extensions.cs" />
     <Compile Include="Assets\UnityLitJson\IJsonWrapper.cs" />
     <Compile Include="Assets\UnityLitJson\JsonAttribute.cs" />

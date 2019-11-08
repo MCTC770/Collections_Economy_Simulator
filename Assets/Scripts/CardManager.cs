@@ -10,24 +10,38 @@ public class CardManager : MonoBehaviour {
 	[SerializeField] int dupliateStarCounter;
 	[SerializeField] int[] cardsOfDrawnRarity;
 	HouseCreator houseCreator;
+	GlobalCardDrawHandler globalCardDrawHandler;
 	JsonData itemData;
 	int counter = -1;
 	int randomNumber;
 	int cardRarity;
 	string json;
 	bool runComplete = false;
+	bool reset = false;
 
 	// Use this for initialization
 	void Start () {
+		globalCardDrawHandler = FindObjectOfType<GlobalCardDrawHandler>();
 		houseCreator = FindObjectOfType<HouseCreator>();
 		json = File.ReadAllText(Application.dataPath + "/CardInfo.json");
 		itemData = JsonMapper.ToObject(json);
 	}
 
+	public void InitializeDuplicateStarCounter()
+	{
+		reset = true;
+	}
+
 	public void DrawCardFromIndexBasedOnRarity(int rarity)
 	{
+		if (reset)
+		{
+			dupliateStarCounter = 0;
+			reset = false;
+		}
+
 		cardRarity = rarity;
-		print("cardRarity: " + cardRarity);
+		//print("cardRarity: " + cardRarity);
 
 		for (int i = 0; i < houseCreator.houseCardNumberIndex.Length; i++)
 		{
@@ -54,13 +68,14 @@ public class CardManager : MonoBehaviour {
 		if (!houseCreator.houseCardIsCollectedIndex[cardsOfDrawnRarity[randomNumber] - 1])
 		{
 			houseCreator.houseCardIsCollectedIndex[cardsOfDrawnRarity[randomNumber] - 1] = true;
-			print("cardsOfDrawnRarity[randomNumber]: " + (cardsOfDrawnRarity[randomNumber] - 1));
+			//print("cardsOfDrawnRarity[randomNumber]: " + (cardsOfDrawnRarity[randomNumber] - 1));
 		}
 		else
 		{
-			print("duplicate! " + cardRarity + " Stars!");
-			print("cardsOfDrawnRarity[randomNumber]: " + (cardsOfDrawnRarity[randomNumber] - 1));
+			//print("duplicate! " + cardRarity + " Stars!");
+			//print("cardsOfDrawnRarity[randomNumber]: " + (cardsOfDrawnRarity[randomNumber] - 1));
 			dupliateStarCounter += cardRarity;
+			globalCardDrawHandler.starCounter = dupliateStarCounter;
 		}
 
 		counter = -1;
