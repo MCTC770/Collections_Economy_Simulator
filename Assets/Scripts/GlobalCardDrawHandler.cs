@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class GlobalCardDrawHandler : MonoBehaviour {
 
+	[SerializeField] int starCounter;
+
 	[SerializeField] int numberOfSimulations;
 	[SerializeField] int numberOfDays;
-	public int starCounter;
 	[SerializeField] float[] setCardRarities = new float[5];
 	[SerializeField] float[] packsPerDay = new float[5];
 	[SerializeField] PackCreator[] packSelection;
@@ -20,6 +21,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	DrawCards cardDrawer;
 	CardManager cardManager;
 	HouseCreator houseCreator;
+	CsvCreator csvCreator;
 
 	float currentCardNum;
 	int[] endNum;
@@ -28,10 +30,13 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	int[] cardsOfRarityInPack;
 	float[] defaultCardRarities;
 
+	[SerializeField] int[] drawnCardIndex;
+
 	int totalPacksThisDay;
 	int packRarityTracker;
 	int currentRarity;
 	int rarityOfCurrentlyDrawnCard;
+	int getIndexOfDrawnCard;
 	string[] fixedPacksPerDay;
 	float[] packsPerDayLeft;
 	int[] numberOfPacksForTheDay = new int[5];
@@ -46,6 +51,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		houseCreator = FindObjectOfType<HouseCreator>();
 		cardDrawer = FindObjectOfType<DrawCards>();
 		cardManager = FindObjectOfType<CardManager>();
+		csvCreator = FindObjectOfType<CsvCreator>();
 
 		starCounter = 0;
 
@@ -64,6 +70,11 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		ResetPackDistributionArray();
 	}
 
+	public void GetStarCounter(int stars)
+	{
+		starCounter = stars;
+	}
+
 	private void InitializeValues()
 	{
 		totalPacksThisDay = 0;
@@ -78,6 +89,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 			packsPerDay[i] = float.Parse(defaultPacksPerDay[i]);
 		}
 
+		drawnCardIndex = new int[houseCreator.houseCardNumberIndex.Length];
 		cardsPerDayTracker = null;
 		cardsPerDayTracker = new int[numberOfDays, packSelection.Length];
 		fixedPacksPerDay = new string[packsPerDay.Length];
@@ -121,11 +133,15 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 
 		if (Input.GetKeyDown(KeyCode.B))
 		{
+			int runCounter = 1;
+			csvCreator.CreateHeader();
 			for (int i = 0; i < numberOfSimulations; i++)
 			{
 				InitializeValues();
 				AllocatePacksForTheDay();
 			}
+			++runCounter;
+			csvCreator.CreateCSVFile();
 		}
 	}
 
@@ -244,6 +260,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 			}
 			SelectPacksIndividually();
 		}
+		csvCreator.CreateCSVString(drawnCardIndex);
 	}
 
 	void SelectPacksIndividually()
@@ -275,7 +292,8 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 
 				DrawChancePerMinimumCardRarity(i);
 				rarityOfCurrentlyDrawnCard = cardDrawer.DrawARarity();
-				cardManager.DrawCardFromIndexBasedOnRarity(rarityOfCurrentlyDrawnCard);
+				getIndexOfDrawnCard = cardManager.DrawCardFromIndexBasedOnRarity(rarityOfCurrentlyDrawnCard);
+				drawnCardIndex[getIndexOfDrawnCard] += 1;
 				cardsOfRarityInPack[i] -= 1;
 			}
 		}

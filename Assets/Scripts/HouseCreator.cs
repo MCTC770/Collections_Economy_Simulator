@@ -19,7 +19,6 @@ public class HouseCreator : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-
 		houseCardNumberIndex = new int[houseCardRarityIndex.Length];
 
 		CreateCardIndex();
@@ -60,7 +59,6 @@ public class HouseCreator : MonoBehaviour {
 				h++;
 			}
 		}
-
 		h = 0;
 	}
 

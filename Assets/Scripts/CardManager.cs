@@ -32,7 +32,7 @@ public class CardManager : MonoBehaviour {
 		reset = true;
 	}
 
-	public void DrawCardFromIndexBasedOnRarity(int rarity)
+	public int DrawCardFromIndexBasedOnRarity(int rarity)
 	{
 		if (reset)
 		{
@@ -68,6 +68,7 @@ public class CardManager : MonoBehaviour {
 		if (!houseCreator.houseCardIsCollectedIndex[cardsOfDrawnRarity[randomNumber] - 1])
 		{
 			houseCreator.houseCardIsCollectedIndex[cardsOfDrawnRarity[randomNumber] - 1] = true;
+			return cardsOfDrawnRarity[randomNumber] - 1;
 			//print("cardsOfDrawnRarity[randomNumber]: " + (cardsOfDrawnRarity[randomNumber] - 1));
 		}
 		else
@@ -75,7 +76,8 @@ public class CardManager : MonoBehaviour {
 			//print("duplicate! " + cardRarity + " Stars!");
 			//print("cardsOfDrawnRarity[randomNumber]: " + (cardsOfDrawnRarity[randomNumber] - 1));
 			dupliateStarCounter += cardRarity;
-			globalCardDrawHandler.starCounter = dupliateStarCounter;
+			globalCardDrawHandler.GetStarCounter(dupliateStarCounter);
+			return cardsOfDrawnRarity[randomNumber] - 1;
 		}
 
 		counter = -1;
