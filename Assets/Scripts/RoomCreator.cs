@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Pack Config")]
 public class RoomCreator : ScriptableObject {
 
+	public float weight;
 	[SerializeField] int OneStarCardsInRoom;
 	[SerializeField] int TwoStarCardsInRoom;
 	[SerializeField] int ThreeStarCardsInRoom;
@@ -23,6 +24,7 @@ public class RoomCreator : ScriptableObject {
 	public int[] indexNumber;
 	public int[] rarity;
 	public bool[] isCollected;
+	public float[] weightOfCardsInRoom;
 
 	// Use this for initialization
 	void Start ()
@@ -43,6 +45,7 @@ public class RoomCreator : ScriptableObject {
 		indexNumber = new int[totalCardsInRoom];
 		rarity = new int[totalCardsInRoom];
 		isCollected = new bool[totalCardsInRoom];
+		weightOfCardsInRoom = new float[totalCardsInRoom];
 	}
 
 	public void SetIndexValue(int indexCounterReceived)
@@ -89,6 +92,7 @@ public class RoomCreator : ScriptableObject {
 			}
 
 			isCollected[i] = false;
+			weightOfCardsInRoom[i] = weight;
 		}
 	}
 }

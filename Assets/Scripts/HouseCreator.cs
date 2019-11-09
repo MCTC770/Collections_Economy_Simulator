@@ -9,6 +9,7 @@ public class HouseCreator : MonoBehaviour {
 
 	public int[] houseCardNumberIndex;
 	public int[] houseCardRarityIndex;
+	public float[] houseCardWeightIndex;
 	public bool[] houseCardIsCollectedIndex;
 
 	public string cardInfoStore;
@@ -23,6 +24,11 @@ public class HouseCreator : MonoBehaviour {
 
 		CreateCardIndex();
 		CreateJson();
+	}
+
+	public RoomCreator[] GetRoomsInThisHouse()
+	{
+		return roomsInThisHouse;
 	}
 
 	public void ResetCardIndex()
@@ -46,6 +52,7 @@ public class HouseCreator : MonoBehaviour {
 		houseCardNumberIndex = new int[totalIndexCounter];
 		houseCardRarityIndex = new int[totalIndexCounter];
 		houseCardIsCollectedIndex = new bool[totalIndexCounter];
+		houseCardWeightIndex = new float[totalIndexCounter];
 
 		int h = 0;
 
@@ -56,6 +63,7 @@ public class HouseCreator : MonoBehaviour {
 				houseCardNumberIndex[h] = roomsInThisHouse[j].indexNumber[i];
 				houseCardRarityIndex[h] = roomsInThisHouse[j].rarity[i];
 				houseCardIsCollectedIndex[h] = roomsInThisHouse[j].isCollected[i];
+				houseCardWeightIndex[h] = roomsInThisHouse[j].weightOfCardsInRoom[i];
 				h++;
 			}
 		}

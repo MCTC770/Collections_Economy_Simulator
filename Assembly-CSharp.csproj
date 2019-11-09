@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\CardIndex.cs" />
     <Compile Include="Assets\Scripts\CardManager.cs" />
+    <Compile Include="Assets\Scripts\CardWeightManager.cs" />
     <Compile Include="Assets\Scripts\CsvCreator.cs" />
     <Compile Include="Assets\Scripts\DrawCards.cs" />
     <Compile Include="Assets\Scripts\GlobalCardDrawHandler.cs" />

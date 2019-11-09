@@ -11,6 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 873f0b42ba77f1346986864455b80b37, type: 3}
   m_Name: Room 2
   m_EditorClassIdentifier: 
+  weight: 1
   OneStarCardsInRoom: 3
   TwoStarCardsInRoom: 2
   ThreeStarCardsInRoom: 1
@@ -20,3 +21,10 @@ MonoBehaviour:
   indexNumber: 05000000060000000700000008000000090000000a000000
   rarity: 010000000100000001000000020000000200000003000000
   isCollected: 000000000000
+  weightOfCardsInRoom:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1

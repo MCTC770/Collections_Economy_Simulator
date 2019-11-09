@@ -237,6 +237,9 @@ MonoBehaviour:
   cardDrawer: {fileID: 667629775}
   dupliateStarCounter: 0
   cardsOfDrawnRarity: 
+  cardWeightIndex: []
+  drawChancesBasedOnWeight: []
+  accumulatedWeights: 0
 --- !u!4 &350043081
 Transform:
   m_ObjectHideFlags: 0
@@ -333,6 +336,11 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 291657143}
   m_Script: {fileID: 11500000, guid: 85203f358fc69bc40bf279ea16eedb27, type: 3}
+--- !u!4 &1548088868 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4772791011383412, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
+    type: 2}
+  m_PrefabInternal: {fileID: 1763482892}
 --- !u!1001 &1763482892
 Prefab:
   m_ObjectHideFlags: 0
@@ -340,6 +348,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
+        type: 2}
+      propertyPath: weight.Array.size
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4772791011383412, guid: 1a2a3641cdd7e704c89a1e4786443ea6, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -375,7 +388,7 @@ Prefab:
     - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
         type: 2}
       propertyPath: numberOfSimulations
-      value: 100
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
         type: 2}
@@ -385,7 +398,7 @@ Prefab:
     - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
         type: 2}
       propertyPath: packsPerDay.Array.data[1]
-      value: 0.5
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
         type: 2}
@@ -416,6 +429,46 @@ Prefab:
         type: 2}
       propertyPath: setCardRarities.Array.data[4]
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
+        type: 2}
+      propertyPath: packsPerDay.Array.data[0]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
+        type: 2}
+      propertyPath: packsPerDay.Array.data[3]
+      value: 0.09
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
+        type: 2}
+      propertyPath: weight.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
+        type: 2}
+      propertyPath: weight.Array.data[1]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
+        type: 2}
+      propertyPath: weight.Array.data[2]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
+        type: 2}
+      propertyPath: weight.Array.data[3]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
+        type: 2}
+      propertyPath: weight.Array.data[4]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
+        type: 2}
+      propertyPath: weight.Array.data[5]
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1a2a3641cdd7e704c89a1e4786443ea6, type: 2}
@@ -460,4 +513,62 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1844380293
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1844380295}
+  - component: {fileID: 1844380294}
+  m_Layer: 0
+  m_Name: Card Weight Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1844380294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1844380293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 323bc62a2910bc34db0f85725448b431, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weightPerHouse: 1
+  weightPerCard: 0
+  weightPerHouseArray:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  weightPerCardArray: []
+  weightChangeByTime: 1
+  weightChangeByProgress: 0
+  shiftSequenceInDays: 0
+  shiftSteps: 0
+  shiftCardProgressSteps: 0
+  shiftRoomProgressSteps: 0
+  timeLocksEnabled: 1
+  daysUntilRoomUnlock: 000000000000000000000000000000001400000028000000
+--- !u!4 &1844380295
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1844380293}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1548088868}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

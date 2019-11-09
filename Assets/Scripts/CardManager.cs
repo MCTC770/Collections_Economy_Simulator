@@ -9,15 +9,20 @@ public class CardManager : MonoBehaviour {
 	[SerializeField] DrawCards cardDrawer;
 	[SerializeField] int dupliateStarCounter;
 	[SerializeField] int[] cardsOfDrawnRarity;
+	[SerializeField] float[] cardWeightIndex;
+	[SerializeField] float[] drawChancesBasedOnWeight;
 	HouseCreator houseCreator;
 	GlobalCardDrawHandler globalCardDrawHandler;
 	JsonData itemData;
 	int counter = -1;
 	int randomNumber;
+	float randomFloat;
 	int cardRarity;
 	string json;
 	bool runComplete = false;
 	bool reset = false;
+	float accumulatedChances = 0;
+	[SerializeField] float accumulatedWeights;
 
 	// Use this for initialization
 	void Start () {
@@ -45,41 +50,70 @@ public class CardManager : MonoBehaviour {
 
 		for (int i = 0; i < houseCreator.houseCardNumberIndex.Length; i++)
 		{
-			if (itemData["index"][i][1].ToString() == cardRarity.ToString())
+			if (houseCreator.houseCardRarityIndex[i] == cardRarity)
 			{
 				++counter;
 			}
 		}
 
 		cardsOfDrawnRarity = new int[counter + 1];
+		cardWeightIndex = new float[counter + 1];
+		drawChancesBasedOnWeight = new float[counter + 1];
+		accumulatedWeights = 0;
 		counter = -1;
 
 		for (int i = 0; i < houseCreator.houseCardNumberIndex.Length; i++)
 		{
-			if (itemData["index"][i][1].ToString() == cardRarity.ToString())
+			if (houseCreator.houseCardRarityIndex[i] == cardRarity)
 			{
 				++counter;
 				cardsOfDrawnRarity[counter] = houseCreator.houseCardNumberIndex[i];
+				cardWeightIndex[counter] += houseCreator.houseCardWeightIndex[i];
+				accumulatedWeights += cardWeightIndex[counter];
+			}
+			
+		}
+
+		for (int i = 0; i < cardsOfDrawnRarity.Length; i++)
+		{
+			if(cardWeightIndex[i] > 0)
+			{
+				drawChancesBasedOnWeight[i] = cardWeightIndex[i] / accumulatedWeights;
+			}
+			else
+			{
+				drawChancesBasedOnWeight[i] = 0;
 			}
 		}
 
-		int randomNumber = Random.Range(0, counter + 1);
+		accumulatedChances = 0;
+		randomFloat = Random.Range(0f, 1f);
 
-		if (!houseCreator.houseCardIsCollectedIndex[cardsOfDrawnRarity[randomNumber] - 1])
+		for (int i = 0; i < drawChancesBasedOnWeight.Length; i++)
 		{
-			houseCreator.houseCardIsCollectedIndex[cardsOfDrawnRarity[randomNumber] - 1] = true;
-			return cardsOfDrawnRarity[randomNumber] - 1;
-			//print("cardsOfDrawnRarity[randomNumber]: " + (cardsOfDrawnRarity[randomNumber] - 1));
+			if (randomFloat > accumulatedChances)
+			{
+				accumulatedChances += drawChancesBasedOnWeight[i];
+			}
+			if (randomFloat <= accumulatedChances)
+			{
+				if (!houseCreator.houseCardIsCollectedIndex[cardsOfDrawnRarity[i] - 1])
+				{
+					houseCreator.houseCardIsCollectedIndex[cardsOfDrawnRarity[i] - 1] = true;
+					counter = -1;
+					return cardsOfDrawnRarity[i] - 1;
+				}
+				else
+				{
+					dupliateStarCounter += cardRarity;
+					globalCardDrawHandler.GetStarCounter(dupliateStarCounter);
+					counter = -1;
+					return cardsOfDrawnRarity[i] - 1;
+				}
+			}
 		}
-		else
-		{
-			//print("duplicate! " + cardRarity + " Stars!");
-			//print("cardsOfDrawnRarity[randomNumber]: " + (cardsOfDrawnRarity[randomNumber] - 1));
-			dupliateStarCounter += cardRarity;
-			globalCardDrawHandler.GetStarCounter(dupliateStarCounter);
-			return cardsOfDrawnRarity[randomNumber] - 1;
-		}
-
-		counter = -1;
+		Debug.LogError("No card of drawn rarity available");
+		Debug.Break();
+		return 99999;
 	}
 }

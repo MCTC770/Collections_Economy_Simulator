@@ -22,6 +22,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	CardManager cardManager;
 	HouseCreator houseCreator;
 	CsvCreator csvCreator;
+	CardWeightManager cardWeightManager;
 
 	float currentCardNum;
 	int[] endNum;
@@ -30,15 +31,18 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	int[] cardsOfRarityInPack;
 	float[] defaultCardRarities;
 
-	[SerializeField] int[] drawnCardIndex;
+	int[] drawnCardIndex;
 
 	int totalPacksThisDay;
 	int packRarityTracker;
 	int currentRarity;
 	int rarityOfCurrentlyDrawnCard;
 	int getIndexOfDrawnCard;
+	bool runCompleted = false;
+
 	string[] fixedPacksPerDay;
 	float[] packsPerDayLeft;
+	[SerializeField] float[] weight;
 	int[] numberOfPacksForTheDay = new int[5];
 	int[] numberOfPacksForTheDayInUse;
 	string[] numberOfPacksForTheDayString;
@@ -52,6 +56,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		cardDrawer = FindObjectOfType<DrawCards>();
 		cardManager = FindObjectOfType<CardManager>();
 		csvCreator = FindObjectOfType<CsvCreator>();
+		cardWeightManager = FindObjectOfType<CardWeightManager>();
 
 		starCounter = 0;
 
@@ -73,6 +78,11 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	public void GetStarCounter(int stars)
 	{
 		starCounter = stars;
+	}
+
+	public void SetWeight(float[] getWeights)
+	{
+		weight = getWeights;
 	}
 
 	private void InitializeValues()
@@ -109,6 +119,11 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		cardsOfRarityInPack = new int[5];
 		numberOfPacksForTheDay = new int[5];
 
+		for (int i = 0; i < weight.Length; i++)
+		{
+			houseCreator.GetRoomsInThisHouse()[i].weight = weight[i];
+		}
+
 		for (int i = 0; i < setCardRarities.Length; i++)
 		{
 			defaultCardRarities[i] = setCardRarities[i];
@@ -126,12 +141,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.A))
-		{
-			SelectPacksIndividually();
-		}
-
-		if (Input.GetKeyDown(KeyCode.B))
+		if (!runCompleted)
 		{
 			int runCounter = 1;
 			csvCreator.CreateHeader();
@@ -142,6 +152,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 			}
 			++runCounter;
 			csvCreator.CreateCSVFile();
+			runCompleted = true;
 		}
 	}
 
@@ -209,6 +220,8 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 
 			for (int j = 0; j < numberOfDays; j++)
 			{
+				cardWeightManager.SetCurrentNumberOfDays(j+1);
+				cardWeightManager.TimeLockRooms();
 				numberOfPacksForTheDayInUse[i] = int.Parse(numberOfPacksForTheDayString[i]);
 
 				if (packDistribution[j] == true)
