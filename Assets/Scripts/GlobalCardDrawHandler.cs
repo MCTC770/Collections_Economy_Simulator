@@ -119,6 +119,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		houseCreator.ResetCardIndex();
 		cardManager.InitializeDuplicateStarCounter();
 		starCounter = 0;
+		cardWeightManager.SetInitialWeightArrayValues();
 		cardWeightManager.ShiftStepIterationCounterInitializer();
 
 		currentSimulation += 1;

@@ -375,6 +375,26 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
+        type: 2}
+      propertyPath: weightPerRoomArray.Array.data[0]
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
+        type: 2}
+      propertyPath: weightPerRoomArray.Array.data[1]
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
+        type: 2}
+      propertyPath: weightPerRoom
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
+        type: 2}
+      propertyPath: weightChangeByProgress
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 773e22ca4ad724b4287d545941c57735, type: 2}
   m_IsPrefabAsset: 0
@@ -560,7 +580,7 @@ Prefab:
     - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
         type: 2}
       propertyPath: numberOfDays
-      value: 10
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
         type: 2}

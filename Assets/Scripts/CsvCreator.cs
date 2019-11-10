@@ -167,7 +167,6 @@ public class CsvCreator : MonoBehaviour {
 	public void SetCurrentDay(int currentDayInput)
 	{
 		currentDay = currentDayInput;
-		print(currentDay);
 	}
 
 	public void SetSimulationCounter(int currentSimulation)

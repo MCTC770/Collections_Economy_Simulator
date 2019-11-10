@@ -31,6 +31,8 @@ public class CardWeightManager : MonoBehaviour {
 	bool shiftStepIterationCounterInitialized = false;
 	string[] setWeightPerRoomArray;
 	string[] setWeightPerCardArray;
+	string[] initialWeightPerRoomArray;
+	string[] initialWeightPerCardArray;
 	GlobalCardDrawHandler globalCardDrawHandler;
 	HouseCreator houseCreator;
 
@@ -46,6 +48,15 @@ public class CardWeightManager : MonoBehaviour {
 			setWeightPerRoomArray[i] = weightPerRoomArray[i].ToString();
 		}
 
+		setWeightPerCardArray = new string[weightPerCardArray.Length];
+		for (int i = 0; i < weightPerCardArray.Length; i++)
+		{
+			setWeightPerCardArray[i] = weightPerCardArray[i].ToString();
+		}
+
+		initialWeightPerCardArray = setWeightPerCardArray;
+		initialWeightPerRoomArray = setWeightPerRoomArray;
+
 		if (weightPerRoom == true)
 		{
 			weightPerCard = false;
@@ -60,6 +71,18 @@ public class CardWeightManager : MonoBehaviour {
 			weightChangeByProgress = false;
 		}
 
+	}
+
+	public void SetInitialWeightArrayValues()
+	{
+		for (int i = 0; i < weightPerCardArray.Length; i++)
+		{
+			weightPerCardArray[i] = float.Parse(initialWeightPerCardArray[i]);
+		}
+		for (int i = 0; i < weightPerRoomArray.Length; i++)
+		{
+			weightPerRoomArray[i] = float.Parse(initialWeightPerRoomArray[i]);
+		}
 	}
 
 	public void ShiftStepIterationCounterInitializer()
@@ -126,7 +149,6 @@ public class CardWeightManager : MonoBehaviour {
 			weightPerRoomArray = new float[indexArray];
 			for (int i = 0; i < weightPerRoomArray.Length; i++)
 			{
-				print(i);
 				if (setWeightPerRoomArray.Length <= weightPerRoomArray.Length && i < setWeightPerRoomArray.Length)
 				{
 					weightPerRoomArray[i] = float.Parse(setWeightPerRoomArray[i]);
@@ -332,6 +354,7 @@ public class CardWeightManager : MonoBehaviour {
 				if (roomCompletionTracker[i] == 0)
 				{
 					roomCompletionTracker[i] += 1;
+					//print("roomCompletionTracker[" + i + "]: " + roomCompletionTracker[i]);
 				}
 			}
 			//print("previousRoomsCompleted: " + previousRoomsCompleted + " countRoomsCompleted: " + countRoomsCompleted);
@@ -342,7 +365,9 @@ public class CardWeightManager : MonoBehaviour {
 		for (int i = 0; i < roomCompletionTracker.Length; i++)
 		{
 			countRoomsCompleted += roomCompletionTracker[i];
+			//print("countRoomsCompleted: " + countRoomsCompleted + " roomCompletionTracker["+i+"]: " + roomCompletionTracker[i]);
 		}
+		//print("countRoomsCompleted After: " + countRoomsCompleted);
 
 		for (int i = 0; i < weightPerRoomArray.Length; i++)
 		{
