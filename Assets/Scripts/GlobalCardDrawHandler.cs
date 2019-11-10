@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class GlobalCardDrawHandler : MonoBehaviour {
 
-	[SerializeField] int starCounter;
-
 	[SerializeField] int numberOfSimulations;
 	[SerializeField] int numberOfDays;
 	[SerializeField] float[] setCardRarities = new float[5];
@@ -33,6 +31,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 
 	int[] drawnCardIndex;
 
+	int starCounter;
 	int totalPacksThisDay;
 	int packRarityTracker;
 	int currentRarity;
@@ -42,7 +41,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 
 	string[] fixedPacksPerDay;
 	float[] packsPerDayLeft;
-	[SerializeField] float[] weight;
+	float[] weight;
 	int[] numberOfPacksForTheDay = new int[5];
 	int[] numberOfPacksForTheDayInUse;
 	string[] numberOfPacksForTheDayString;
@@ -71,8 +70,8 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 			defaultPacksPerDay[i] = packsPerDay[i].ToString();
 		}
 
-		InitializeValues();
-		ResetPackDistributionArray();
+		//InitializeValues();
+		//ResetPackDistributionArray();
 	}
 
 	public void GetStarCounter(int stars)
@@ -119,6 +118,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		cardsOfRarityInPack = new int[5];
 		numberOfPacksForTheDay = new int[5];
 
+		weight = cardWeightManager.GetWeightPerRoomArray();
 		for (int i = 0; i < weight.Length; i++)
 		{
 			houseCreator.GetRoomsInThisHouse()[i].weight = weight[i];
@@ -129,6 +129,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 			defaultCardRarities[i] = setCardRarities[i];
 		}
 		GetCardValues();
+		ResetPackDistributionArray();
 	}
 
 	private void ResetPackDistributionArray()
@@ -220,8 +221,6 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 
 			for (int j = 0; j < numberOfDays; j++)
 			{
-				cardWeightManager.SetCurrentNumberOfDays(j+1);
-				cardWeightManager.TimeLockRooms();
 				numberOfPacksForTheDayInUse[i] = int.Parse(numberOfPacksForTheDayString[i]);
 
 				if (packDistribution[j] == true)
@@ -243,6 +242,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 
 		for (int j = 0; j < numberOfDays; j++)
 		{
+			cardWeightManager.SetCurrentNumberOfDays(j + 1);
 			totalPacksThisDay = 0;
 
 			for (int k = 0; k < packSelection.Length; k++)

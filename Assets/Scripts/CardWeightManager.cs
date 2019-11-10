@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class CardWeightManager : MonoBehaviour {
 
-	[SerializeField] bool weightPerHouse = true;
+	[SerializeField] bool weightPerRoom = true;
 	[SerializeField] bool weightPerCard;
 	[Space(12)]
-	[SerializeField] float[] weightPerHouseArray;
+	[SerializeField] float[] weightPerRoomArray;
 	[SerializeField] float[] weightPerCardArray;
 	[Space(12)]
-	[SerializeField] bool weightChangeByTime = true;
+	[SerializeField] bool weightChangeByDays = true;
 	[SerializeField] bool weightChangeByProgress;
 	[Space(12)]
 	[SerializeField] int shiftSequenceInDays;
@@ -22,36 +22,37 @@ public class CardWeightManager : MonoBehaviour {
 	[SerializeField] int[] daysUntilRoomUnlock;
 
 	int currentNumberOfDays;
-	string[] setWeightPerHouseArray;
+	int shiftSequenceCounter;
+	int dayOfLastShift = 0;
+	string[] setWeightPerRoomArray;
+	string[] setWeightPerCardArray;
 	GlobalCardDrawHandler globalCardDrawHandler;
+	HouseCreator houseCreator;
 
 	// Use this for initialization
 	void Start () {
+		houseCreator = FindObjectOfType<HouseCreator>();
 		globalCardDrawHandler = FindObjectOfType<GlobalCardDrawHandler>();
-		globalCardDrawHandler.SetWeight(weightPerHouseArray);
+		globalCardDrawHandler.SetWeight(weightPerRoomArray);
 
-		setWeightPerHouseArray = new string[weightPerHouseArray.Length];
-		for (int i = 0; i < weightPerHouseArray.Length; i++)
+		setWeightPerRoomArray = new string[weightPerRoomArray.Length];
+		for (int i = 0; i < weightPerRoomArray.Length; i++)
 		{
-			setWeightPerHouseArray[i] = weightPerHouseArray[i].ToString();
+			setWeightPerRoomArray[i] = weightPerRoomArray[i].ToString();
 		}
 
-		if (weightPerHouse == true)
+		if (weightPerRoom == true)
 		{
 			weightPerCard = false;
 		}
 		else
 		{
-			weightPerCard = true;
+			timeLocksEnabled = false;
 		}
 
-		if (weightChangeByTime == true)
+		if (weightChangeByDays == true)
 		{
 			weightChangeByProgress = false;
-		}
-		else
-		{
-			weightChangeByProgress = true;
 		}
 
 	}
@@ -59,27 +60,159 @@ public class CardWeightManager : MonoBehaviour {
 	public void SetCurrentNumberOfDays(int currentDayCount)
 	{
 		currentNumberOfDays = currentDayCount;
+		ShiftSequenceHandler();
+	}
+
+	public float[] GetWeightPerRoomArray()
+	{
+		return weightPerRoomArray;
+	}
+
+	public float[] GetWeightPerCardArray()
+	{
+		return weightPerCardArray;
+	}
+
+	public void SetLengthOfWeightPerCardArray(int[] indexArray)
+	{
+		InitializeSetWeightPerCardArray();
+
+		if (indexArray.Length != weightPerCardArray.Length)
+		{
+			weightPerCardArray = new float[indexArray.Length];
+			for (int i = 0; i < weightPerCardArray.Length; i++)
+			{
+				if (setWeightPerCardArray.Length <= weightPerCardArray.Length && i < setWeightPerCardArray.Length)
+				{
+					weightPerCardArray[i] = float.Parse(setWeightPerCardArray[i]);
+				}
+				else if (setWeightPerCardArray.Length > weightPerCardArray.Length)
+				{
+					weightPerCardArray[i] = float.Parse(setWeightPerCardArray[i]);
+				}
+				else
+				{
+					weightPerCardArray[i] = 0;
+				}
+			}
+		}
+	}
+
+	private void InitializeSetWeightPerCardArray()
+	{
+		setWeightPerCardArray = new string[weightPerCardArray.Length];
+		for (int i = 0; i < weightPerCardArray.Length; i++)
+		{
+			setWeightPerCardArray[i] = weightPerCardArray[i].ToString();
+		}
+	}
+
+	public void SetLengthOfWeightPerRoomArray(int indexArray)
+	{
+		InitializeSetWeightPerRoomArray();
+
+		if (indexArray != weightPerRoomArray.Length)
+		{
+			weightPerRoomArray = new float[indexArray];
+			for (int i = 0; i < weightPerRoomArray.Length; i++)
+			{
+				print(i);
+				if (setWeightPerRoomArray.Length <= weightPerRoomArray.Length && i < setWeightPerRoomArray.Length)
+				{
+					weightPerRoomArray[i] = float.Parse(setWeightPerRoomArray[i]);
+				}
+				else if (setWeightPerRoomArray.Length > weightPerRoomArray.Length)
+				{
+					weightPerRoomArray[i] = float.Parse(setWeightPerRoomArray[i]);
+				}
+				else
+				{
+					weightPerRoomArray[i] = 0;
+				}
+			}
+		}
+	}
+
+	private void InitializeSetWeightPerRoomArray()
+	{
+		setWeightPerRoomArray = new string[weightPerRoomArray.Length];
+		for (int i = 0; i < weightPerRoomArray.Length; i++)
+		{
+			setWeightPerRoomArray[i] = weightPerRoomArray[i].ToString();
+		}
 	}
 
 	public void TimeLockRooms()
 	{
 		if (timeLocksEnabled)
 		{
-			for (int i = 0; i < weightPerHouseArray.Length; i++)
+			for (int i = 0; i < weightPerRoomArray.Length; i++)
 			{
-				weightPerHouseArray[i] = int.Parse(setWeightPerHouseArray[i]);
+				weightPerRoomArray[i] = int.Parse(setWeightPerRoomArray[i]);
 			}
 
 			for (int i = 0; i < daysUntilRoomUnlock.Length; i++)
 			{
 				if (daysUntilRoomUnlock[i] >= currentNumberOfDays)
 				{
-					weightPerHouseArray[i] = 0;
+					weightPerRoomArray[i] = 0;
 				}
 			}
-
-			globalCardDrawHandler.SetWeight(weightPerHouseArray);
+			globalCardDrawHandler.SetWeight(weightPerRoomArray);
 		}
+	}
+
+	void ShiftSequenceHandler()
+	{
+		if (weightChangeByDays)
+		{
+			shiftSequenceCounter += 1;
+			print("shiftSequenceInDays: " + shiftSequenceInDays + " shiftSequenceCounter: " + shiftSequenceCounter);
+			if (shiftSequenceInDays <= shiftSequenceCounter && dayOfLastShift != currentNumberOfDays)
+			{
+				shiftSequenceCounter -= shiftSequenceInDays;
+				dayOfLastShift = currentNumberOfDays;
+				if (weightPerRoom)
+				{
+					shiftSequenceCounter = 0;
+					InitializeSetWeightPerRoomArray();
+					weightPerRoomArray = new float[weightPerRoomArray.Length];
+					for (int i = 0; i < weightPerRoomArray.Length; i++)
+					{
+						int shiftCalculator = i - shiftSteps;
+
+						if (shiftCalculator < 0)
+						{
+							shiftCalculator += weightPerRoomArray.Length;
+						}
+						weightPerRoomArray[i] = float.Parse(setWeightPerRoomArray[shiftCalculator]);
+						//print("currentNumberOfDays: " + currentNumberOfDays + " shiftCalculator: " + shiftCalculator + " weightPerRoomArray[" + i + "]: " + weightPerRoomArray[i]);
+					}
+					print("---");
+				}
+				else if (weightPerCard)
+				{
+					shiftSequenceCounter = 0;
+					InitializeSetWeightPerCardArray();
+					weightPerCardArray = new float[weightPerCardArray.Length];
+					for (int i = 0; i < weightPerCardArray.Length; i++)
+					{
+						int shiftCalculator = i - shiftSteps;
+
+						if (shiftCalculator < 0)
+						{
+							shiftCalculator += weightPerCardArray.Length;
+						}
+						weightPerCardArray[i] = float.Parse(setWeightPerCardArray[shiftCalculator]);
+						print("currentNumberOfDays: " + currentNumberOfDays + " shiftCalculator: " + shiftCalculator + " weightPerCardArray[" + i + "]: " + weightPerCardArray[i]);
+					}
+					houseCreator.houseCardWeightIndex = weightPerCardArray;
+					print("---");
+				}
+				TimeLockRooms();
+			}
+		}
+
 	}
 
 	// Update is called once per frame

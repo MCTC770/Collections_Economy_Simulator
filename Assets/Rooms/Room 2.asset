@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Name: Room 2
   m_EditorClassIdentifier: 
   weight: 1
-  OneStarCardsInRoom: 3
+  OneStarCardsInRoom: 2
   TwoStarCardsInRoom: 2
   ThreeStarCardsInRoom: 1
-  FourStarCardsInRoom: 0
+  FourStarCardsInRoom: 1
   FiveStarCardsInRoom: 0
   totalCardsInRoom: 6
   indexNumber: 05000000060000000700000008000000090000000a000000
-  rarity: 010000000100000001000000020000000200000003000000
+  rarity: 010000000100000002000000020000000300000004000000
   isCollected: 000000000000
   weightOfCardsInRoom:
   - 1

@@ -12,14 +12,17 @@ public class HouseCreator : MonoBehaviour {
 	public float[] houseCardWeightIndex;
 	public bool[] houseCardIsCollectedIndex;
 
-	public string cardInfoStore;
+	//public string cardInfoStore;
 
 	CardIndex[] cardIndex;
+	CardWeightManager cardWeightManager;
 	string json;
+	bool checkedWeightManagerArrays = false;
 
 	// Use this for initialization
 	void Start ()
 	{
+		cardWeightManager = FindObjectOfType<CardWeightManager>();
 		houseCardNumberIndex = new int[houseCardRarityIndex.Length];
 
 		CreateCardIndex();
@@ -68,6 +71,13 @@ public class HouseCreator : MonoBehaviour {
 			}
 		}
 		h = 0;
+
+		if (!checkedWeightManagerArrays)
+		{
+			cardWeightManager.SetLengthOfWeightPerCardArray(houseCardNumberIndex);
+			cardWeightManager.SetLengthOfWeightPerRoomArray(indexArray: roomsInThisHouse.Length);
+			checkedWeightManagerArrays = true;
+		}
 	}
 
 	void CreateJson()
