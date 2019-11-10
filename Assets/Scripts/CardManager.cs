@@ -13,6 +13,7 @@ public class CardManager : MonoBehaviour {
 	[SerializeField] float[] drawChancesBasedOnWeight;
 	HouseCreator houseCreator;
 	GlobalCardDrawHandler globalCardDrawHandler;
+	CsvCreator csvCreator;
 	JsonData itemData;
 	int counter = -1;
 	int randomNumber;
@@ -28,6 +29,7 @@ public class CardManager : MonoBehaviour {
 	void Start () {
 		globalCardDrawHandler = FindObjectOfType<GlobalCardDrawHandler>();
 		houseCreator = FindObjectOfType<HouseCreator>();
+		csvCreator = FindObjectOfType<CsvCreator>();
 		json = File.ReadAllText(Application.dataPath + "/CardInfo.json");
 		itemData = JsonMapper.ToObject(json);
 	}
@@ -106,7 +108,8 @@ public class CardManager : MonoBehaviour {
 				else
 				{
 					dupliateStarCounter += cardRarity;
-					globalCardDrawHandler.GetStarCounter(dupliateStarCounter);
+					globalCardDrawHandler.SetStarCounter(dupliateStarCounter);
+					csvCreator.SetDuplicateStarCounter(dupliateStarCounter);
 					counter = -1;
 					return cardsOfDrawnRarity[i] - 1;
 				}

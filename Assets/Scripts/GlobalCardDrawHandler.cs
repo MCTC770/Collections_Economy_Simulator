@@ -31,6 +31,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	float[] defaultCardRarities;
 
 	int[] drawnCardIndex;
+	int[] dailyDrawnCardIndex;
 
 	int starCounter;
 	int totalPacksThisDay;
@@ -38,6 +39,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	int currentRarity;
 	int rarityOfCurrentlyDrawnCard;
 	int getIndexOfDrawnCard;
+	int currentSimulation;
 	bool runCompleted = false;
 
 	string[] fixedPacksPerDay;
@@ -75,7 +77,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		//ResetPackDistributionArray();
 	}
 
-	public void GetStarCounter(int stars)
+	public void SetStarCounter(int stars)
 	{
 		starCounter = stars;
 	}
@@ -83,6 +85,11 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	public void SetWeight(float[] getWeights)
 	{
 		weight = getWeights;
+	}
+
+	public int GetNumberOfDays()
+	{
+		return numberOfDays;
 	}
 
 	private void InitializeValues()
@@ -100,6 +107,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		}
 
 		drawnCardIndex = new int[houseCreator.houseCardNumberIndex.Length];
+		dailyDrawnCardIndex = new int[houseCreator.houseCardNumberIndex.Length];
 		cardsPerDayTracker = null;
 		cardsPerDayTracker = new int[numberOfDays, packSelection.Length];
 		fixedPacksPerDay = new string[packsPerDay.Length];
@@ -113,6 +121,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		starCounter = 0;
 		cardWeightManager.ShiftStepIterationCounterInitializer();
 
+		currentSimulation += 1;
 		endNum = new int[packsPerDay.Length];
 		packDistribution = null;
 		packDistribution = new bool[numberOfDays];
@@ -274,8 +283,12 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 				}
 			}
 			SelectPacksIndividually();
+			csvCreator.SetCurrentDay(j + 1);
+			csvCreator.SetSimulationCounter(currentSimulation);
+			csvCreator.CreateCSVString(dailyDrawnCardIndex, true);
+			dailyDrawnCardIndex = new int[dailyDrawnCardIndex.Length];
 		}
-		csvCreator.CreateCSVString(drawnCardIndex);
+		csvCreator.CreateCSVString(drawnCardIndex, false);
 	}
 
 	void SelectPacksIndividually()
@@ -309,6 +322,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 				rarityOfCurrentlyDrawnCard = cardDrawer.DrawARarity();
 				getIndexOfDrawnCard = cardManager.DrawCardFromIndexBasedOnRarity(rarityOfCurrentlyDrawnCard);
 				drawnCardIndex[getIndexOfDrawnCard] += 1;
+				dailyDrawnCardIndex[getIndexOfDrawnCard] += 1;
 				cardsOfRarityInPack[i] -= 1;
 			}
 		}

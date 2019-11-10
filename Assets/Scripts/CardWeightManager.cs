@@ -195,35 +195,38 @@ public class CardWeightManager : MonoBehaviour {
 
 	private void TimeLockRooms()
 	{
-		string[] temporaryWeightPerRoomArrayStore = new string[weightPerRoomArray.Length];
-		for (int i = 0; i < weightPerRoomArray.Length; i++)
+		if (timeLocksEnabled)
 		{
-			temporaryWeightPerRoomArrayStore[i] = weightPerRoomArray[i].ToString();
-		}
-
-		for (int i = 0; i < daysUntilRoomUnlock.Length; i++)
-		{
-			if (daysUntilRoomUnlock[i] >= currentNumberOfDays)
+			string[] temporaryWeightPerRoomArrayStore = new string[weightPerRoomArray.Length];
+			for (int i = 0; i < weightPerRoomArray.Length; i++)
 			{
-				weightPerRoomArray[i] = 0;
+				temporaryWeightPerRoomArrayStore[i] = weightPerRoomArray[i].ToString();
 			}
-		}
 
-		cardIndexCounter = 0;
-		for (int i = 0; i < houseCreator.GetRoomsInThisHouse().Length; i++)
-		{
-			for (int j = 0; j < houseCreator.GetRoomsInThisHouse()[i].weightOfCardsInRoom.Length; j++)
+			for (int i = 0; i < daysUntilRoomUnlock.Length; i++)
 			{
-				houseCreator.houseCardWeightIndex[cardIndexCounter] = weightPerRoomArray[i];
-				cardIndexCounter += 1;
+				if (daysUntilRoomUnlock[i] >= currentNumberOfDays)
+				{
+					weightPerRoomArray[i] = 0;
+				}
 			}
-		}
-		
-		globalCardDrawHandler.SetWeight(weightPerRoomArray);
 
-		for (int i = 0; i < weightPerRoomArray.Length; i++)
-		{
-			weightPerRoomArray[i] = float.Parse(temporaryWeightPerRoomArrayStore[i]);
+			cardIndexCounter = 0;
+			for (int i = 0; i < houseCreator.GetRoomsInThisHouse().Length; i++)
+			{
+				for (int j = 0; j < houseCreator.GetRoomsInThisHouse()[i].weightOfCardsInRoom.Length; j++)
+				{
+					houseCreator.houseCardWeightIndex[cardIndexCounter] = weightPerRoomArray[i];
+					cardIndexCounter += 1;
+				}
+			}
+
+			globalCardDrawHandler.SetWeight(weightPerRoomArray);
+
+			for (int i = 0; i < weightPerRoomArray.Length; i++)
+			{
+				weightPerRoomArray[i] = float.Parse(temporaryWeightPerRoomArrayStore[i]);
+			}
 		}
 	}
 
