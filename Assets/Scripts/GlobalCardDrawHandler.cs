@@ -6,6 +6,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 
 	[SerializeField] int numberOfSimulations;
 	[SerializeField] int numberOfDays;
+	[Space (12)]
 	[SerializeField] float[] setCardRarities = new float[5];
 	[SerializeField] float[] packsPerDay = new float[5];
 	[SerializeField] PackCreator[] packSelection;
@@ -110,6 +111,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		houseCreator.ResetCardIndex();
 		cardManager.InitializeDuplicateStarCounter();
 		starCounter = 0;
+		cardWeightManager.ShiftStepIterationCounterInitializer();
 
 		endNum = new int[packsPerDay.Length];
 		packDistribution = null;

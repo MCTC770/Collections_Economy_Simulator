@@ -13,6 +13,17 @@ public class RoomCreator : ScriptableObject {
 	[SerializeField] int FiveStarCardsInRoom;
 	[SerializeField] int totalCardsInRoom;
 
+	[Space(12)]
+
+	//public bool roomCompled;
+
+	[Space(12)]
+
+	public int[] indexNumber;
+	public int[] rarity;
+	public bool[] isCollected;
+	public float[] weightOfCardsInRoom;
+
 	int OneStarCardsLeft;
 	int TwoStarCardsLeft;
 	int ThreeStarCardsLeft;
@@ -20,11 +31,7 @@ public class RoomCreator : ScriptableObject {
 	int FiveStarCardsLeft;
 
 	int cardIndexCounter;
-
-	public int[] indexNumber;
-	public int[] rarity;
-	public bool[] isCollected;
-	public float[] weightOfCardsInRoom;
+	//int cardsCollectedCounter;
 
 	// Use this for initialization
 	void Start ()
@@ -95,4 +102,21 @@ public class RoomCreator : ScriptableObject {
 			weightOfCardsInRoom[i] = weight;
 		}
 	}
+
+	/*public void CheckForRoomCompletion()
+	{
+		roomCompled = false;
+		for (int i = 0; i < isCollected.Length; i++)
+		{
+			if (isCollected[i] == true)
+			{
+				cardsCollectedCounter += 1;
+			}
+			if (cardsCollectedCounter == isCollected.Length)
+			{
+				roomCompled = true;
+			}
+			Debug.Log("cardsCollectedCounter: " + cardsCollectedCounter + " isCollected.Length: " + isCollected.Length);
+		}
+	}*/
 }

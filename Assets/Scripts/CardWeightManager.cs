@@ -24,6 +24,10 @@ public class CardWeightManager : MonoBehaviour {
 	int currentNumberOfDays;
 	int shiftSequenceCounter;
 	int dayOfLastShift = 0;
+	int initialCollectedCardsCounter;
+	int shiftStepIterationCounter = 1;
+	int countRoomsCompleted = 0;
+	bool shiftStepIterationCounterInitialized = false;
 	string[] setWeightPerRoomArray;
 	string[] setWeightPerCardArray;
 	GlobalCardDrawHandler globalCardDrawHandler;
@@ -55,6 +59,11 @@ public class CardWeightManager : MonoBehaviour {
 			weightChangeByProgress = false;
 		}
 
+	}
+
+	public void ShiftStepIterationCounterInitializer()
+	{
+		shiftStepIterationCounterInitialized = false;
 	}
 
 	public void SetCurrentNumberOfDays(int currentDayCount)
@@ -164,59 +173,171 @@ public class CardWeightManager : MonoBehaviour {
 
 	void ShiftSequenceHandler()
 	{
-		if (weightChangeByDays)
+		if (!timeLocksEnabled)
 		{
-			shiftSequenceCounter += 1;
-			print("shiftSequenceInDays: " + shiftSequenceInDays + " shiftSequenceCounter: " + shiftSequenceCounter);
-			if (shiftSequenceInDays <= shiftSequenceCounter && dayOfLastShift != currentNumberOfDays)
+			if (weightChangeByDays)
 			{
-				shiftSequenceCounter -= shiftSequenceInDays;
-				dayOfLastShift = currentNumberOfDays;
+				shiftSequenceCounter += 1;
+				print("shiftSequenceInDays: " + shiftSequenceInDays + " shiftSequenceCounter: " + shiftSequenceCounter);
+				if (shiftSequenceInDays <= shiftSequenceCounter && dayOfLastShift != currentNumberOfDays)
+				{
+					shiftSequenceCounter -= shiftSequenceInDays;
+					dayOfLastShift = currentNumberOfDays;
+					if (weightPerRoom)
+					{
+						CalculateWeightChanceByDayPerRoom();
+					}
+					else if (weightPerCard)
+					{
+						CalculateWeightChanceByDayPerCard();
+					}
+					TimeLockRooms();
+				}
+			}
+			else if (weightChangeByProgress)
+			{
+				initialCollectedCardsCounter = 0;
+				if (!shiftStepIterationCounterInitialized)
+				{
+					shiftStepIterationCounter = 1;
+					shiftStepIterationCounterInitialized = true;
+				}
 				if (weightPerRoom)
 				{
-					shiftSequenceCounter = 0;
 					InitializeSetWeightPerRoomArray();
-					weightPerRoomArray = new float[weightPerRoomArray.Length];
+					//weightPerRoomArray = new float[weightPerRoomArray.Length];
+					int previousRoomsCompleted = countRoomsCompleted;
+					int[] roomCompletionTracker = new int[houseCreator.GetRoomsInThisHouse().Length];
+
+					for (int i = 0; i < roomCompletionTracker.Length; i++)
+					{
+						roomCompletionTracker[i] = 0;
+					}
+
+					for (int i = 0; i < houseCreator.GetRoomsInThisHouse().Length; i++)
+					{
+						int totalCardsCollectedInRoom = 0;
+						for (int j = 0; j < houseCreator.GetRoomsInThisHouse()[i].indexNumber.Length; j++)
+						{
+							int[] collectedCardsPerRoomCounter = new int[houseCreator.GetRoomsInThisHouse()[i].indexNumber.Length];
+							int currentIndex = houseCreator.GetRoomsInThisHouse()[i].indexNumber[j];
+							if (houseCreator.houseCardIsCollectedIndex[currentIndex - 1])
+							{
+								collectedCardsPerRoomCounter[j] = 1;
+							}
+							//print(j + " " + collectedCardsPerRoomCounter[j]);
+							for (int k = 0; k < collectedCardsPerRoomCounter.Length; k++)
+							{
+								totalCardsCollectedInRoom += collectedCardsPerRoomCounter[k];
+							}
+							//print("totalCardsCollectedInRoom: " + totalCardsCollectedInRoom);
+						}
+						if (totalCardsCollectedInRoom >= houseCreator.GetRoomsInThisHouse()[i].indexNumber.Length)
+						{
+							if (roomCompletionTracker[i] == 0)
+							{
+								roomCompletionTracker[i] += 1;
+							}
+						}
+						//print("previousRoomsCompleted: " + previousRoomsCompleted + " countRoomsCompleted: " + countRoomsCompleted);
+					}
+
+					countRoomsCompleted = 0;
+
+					for (int i = 0; i < roomCompletionTracker.Length; i++)
+					{
+						countRoomsCompleted += roomCompletionTracker[i];
+					}
+
 					for (int i = 0; i < weightPerRoomArray.Length; i++)
 					{
-						int shiftCalculator = i - shiftSteps;
-
-						if (shiftCalculator < 0)
+						if (countRoomsCompleted > previousRoomsCompleted)
 						{
-							shiftCalculator += weightPerRoomArray.Length;
+							int shiftCalculator = i - shiftSteps;
+							if (shiftCalculator < 0)
+							{
+								shiftCalculator += weightPerRoomArray.Length;
+							}
+							print("setWeightPerRoomArray[" + shiftCalculator + "]: " + setWeightPerRoomArray[shiftCalculator]);
+							weightPerRoomArray[i] = float.Parse(setWeightPerRoomArray[shiftCalculator]);
+							//print("currentNumberOfDays: " + currentNumberOfDays + " shiftCalculator: " + shiftCalculator + " weightPerRoomArray[" + i + "]: " + weightPerRoomArray[i]);
 						}
-						weightPerRoomArray[i] = float.Parse(setWeightPerRoomArray[shiftCalculator]);
-						//print("currentNumberOfDays: " + currentNumberOfDays + " shiftCalculator: " + shiftCalculator + " weightPerRoomArray[" + i + "]: " + weightPerRoomArray[i]);
 					}
 					print("---");
 				}
 				else if (weightPerCard)
 				{
-					shiftSequenceCounter = 0;
-					InitializeSetWeightPerCardArray();
-					weightPerCardArray = new float[weightPerCardArray.Length];
-					for (int i = 0; i < weightPerCardArray.Length; i++)
-					{
-						int shiftCalculator = i - shiftSteps;
-
-						if (shiftCalculator < 0)
-						{
-							shiftCalculator += weightPerCardArray.Length;
-						}
-						weightPerCardArray[i] = float.Parse(setWeightPerCardArray[shiftCalculator]);
-						print("currentNumberOfDays: " + currentNumberOfDays + " shiftCalculator: " + shiftCalculator + " weightPerCardArray[" + i + "]: " + weightPerCardArray[i]);
-					}
-					houseCreator.houseCardWeightIndex = weightPerCardArray;
-					print("---");
+					CalculateWeightChanceByProgressPerCard();
 				}
 				TimeLockRooms();
 			}
 		}
-
 	}
 
-	// Update is called once per frame
-	void Update () {
-		
+	private void CalculateWeightChanceByDayPerRoom()
+	{
+		shiftSequenceCounter = 0;
+		InitializeSetWeightPerRoomArray();
+		weightPerRoomArray = new float[weightPerRoomArray.Length];
+		for (int i = 0; i < weightPerRoomArray.Length; i++)
+		{
+			int shiftCalculator = i - shiftSteps;
+
+			if (shiftCalculator < 0)
+			{
+				shiftCalculator += weightPerRoomArray.Length;
+			}
+			weightPerRoomArray[i] = float.Parse(setWeightPerRoomArray[shiftCalculator]);
+			print("currentNumberOfDays: " + currentNumberOfDays + " shiftCalculator: " + shiftCalculator + " weightPerRoomArray[" + i + "]: " + weightPerRoomArray[i]);
+		}
+		print("---");
+	}
+
+	private void CalculateWeightChanceByDayPerCard()
+	{
+		shiftSequenceCounter = 0;
+		InitializeSetWeightPerCardArray();
+		weightPerCardArray = new float[weightPerCardArray.Length];
+		for (int i = 0; i < weightPerCardArray.Length; i++)
+		{
+			int shiftCalculator = i - shiftSteps;
+
+			if (shiftCalculator < 0)
+			{
+				shiftCalculator += weightPerCardArray.Length;
+			}
+			weightPerCardArray[i] = float.Parse(setWeightPerCardArray[shiftCalculator]);
+			print("currentNumberOfDays: " + currentNumberOfDays + " shiftCalculator: " + shiftCalculator + " weightPerCardArray[" + i + "]: " + weightPerCardArray[i]);
+		}
+		houseCreator.houseCardWeightIndex = weightPerCardArray;
+		print("---");
+	}
+
+	private void CalculateWeightChanceByProgressPerCard()
+	{
+		for (int i = 0; i < houseCreator.houseCardIsCollectedIndex.Length; i++)
+		{
+			if (houseCreator.houseCardIsCollectedIndex[i] == true)
+			{
+				initialCollectedCardsCounter += 1;
+			}
+		}
+		print("initialCollectedCardsCounter: " + initialCollectedCardsCounter + " shiftCardProgressSteps * shiftStepIterationCounter: " + shiftCardProgressSteps * shiftStepIterationCounter);
+		if (initialCollectedCardsCounter >= shiftCardProgressSteps * shiftStepIterationCounter)
+		{
+			shiftStepIterationCounter += 1;
+			InitializeSetWeightPerCardArray();
+			for (int i = 0; i < weightPerCardArray.Length; i++)
+			{
+				int shiftCalculator = i - shiftSteps;
+				if (shiftCalculator < 0)
+				{
+					shiftCalculator += weightPerCardArray.Length;
+				}
+				weightPerCardArray[i] = float.Parse(setWeightPerCardArray[shiftCalculator]);
+				print("currentNumberOfDays: " + currentNumberOfDays + " shiftStepIterationCounter: " + (shiftStepIterationCounter - 1) + " initialCollectedCardsCounter: " + initialCollectedCardsCounter + " shiftCalculator: " + shiftCalculator + " weightPerCardArray[" + i + "]: " + weightPerCardArray[i]);
+			}
+			print("---");
+		}
 	}
 }
