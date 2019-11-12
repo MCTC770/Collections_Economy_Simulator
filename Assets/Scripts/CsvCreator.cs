@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class CsvCreator : MonoBehaviour {
+public class CsvCreator : MonoBehaviour
+{
 
 	[SerializeField] string fileNameTotalLog;
 	[SerializeField] string fileNameDailyLog;
@@ -21,14 +22,16 @@ public class CsvCreator : MonoBehaviour {
 	GlobalCardDrawHandler globalCardDrawHandler;
 
 	// Use this for initialization
-	void Start () {
+	void Start()
+	{
 		housecreator = FindObjectOfType<HouseCreator>();
 		globalCardDrawHandler = FindObjectOfType<GlobalCardDrawHandler>();
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
-		
+	void Update()
+	{
+
 	}
 
 	public void InitializeCSV()
@@ -44,6 +47,8 @@ public class CsvCreator : MonoBehaviour {
 			csvTotal += "Days,";
 			csvTotal += "Duplicate Stars,";
 			csvTotal += "Total Cards,";
+			csvTotal += "Avg Cards/Day,";
+			csvTotal += "Unique Cards,";
 			for (int i = 0; i < housecreator.houseCardIsCollectedIndex.Length; i++)
 			{
 				csvTotal += "Card" + (i + 1);
@@ -61,7 +66,11 @@ public class CsvCreator : MonoBehaviour {
 			csvDaily += "Daily Cards,";
 			for (int i = 0; i < housecreator.houseCardIsCollectedIndex.Length; i++)
 			{
-				csvDaily += "Card" + (i + 1);
+				csvDaily += "Card" + (i + 1) + ",";
+			}
+			for (int i = 0; i < housecreator.houseCardIsCollectedIndex.Length; i++)
+			{
+				csvDaily += "Card" + (i + 1) + " Daily";
 				if (i < housecreator.houseCardIsCollectedIndex.Length - 1)
 				{
 					csvDaily += ",";
@@ -70,15 +79,15 @@ public class CsvCreator : MonoBehaviour {
 		}
 	}
 
-	public void CreateCSVString(int[] drawnCardIndex, bool daily)
+	public void CreateCSVString(int[] drawnCardIndexTotal, int[] drawnCardIndexDaily, bool daily)
 	{
 		if (totalLog && !daily)
 		{
-			CreateTotalLog(drawnCardIndex);
+			CreateTotalLog(drawnCardIndexTotal);
 		}
 		if (dailyLog && daily)
 		{
-			CreateDailyLog(drawnCardIndex);
+			CreateDailyLog(drawnCardIndexTotal, drawnCardIndexDaily);
 		}
 	}
 
@@ -104,6 +113,20 @@ public class CsvCreator : MonoBehaviour {
 		}
 		csvTotal += totalDrawnCards + ",";
 
+		// Average cards drawn
+		csvTotal += ((float)totalDrawnCards / (float)globalCardDrawHandler.GetNumberOfDays()) + ",";
+
+		// Total unique cards collected
+		int totalUniqueCardsDrawn = 0;
+		for (int i = 0; i < drawnCardIndex.Length; i++)
+		{
+			if (drawnCardIndex[i] != 0)
+			{
+				++totalUniqueCardsDrawn;
+			}
+		}
+		csvTotal += totalUniqueCardsDrawn + ",";
+
 		// Tracks collected cards
 		for (int i = 0; i < drawnCardIndex.Length; i++)
 		{
@@ -115,7 +138,7 @@ public class CsvCreator : MonoBehaviour {
 		}
 	}
 
-	private void CreateDailyLog(int[] drawnCardIndex)
+	private void CreateDailyLog(int[] drawnCardIndexTotal, int[] drawnCardIndexDaily)
 	{
 		csvDaily += System.Environment.NewLine;
 
@@ -130,17 +153,23 @@ public class CsvCreator : MonoBehaviour {
 
 		// Total cards drawn
 		int totalDrawnCards = 0;
-		for (int i = 0; i < drawnCardIndex.Length; i++)
+		for (int i = 0; i < drawnCardIndexTotal.Length; i++)
 		{
-			totalDrawnCards += drawnCardIndex[i];
+			totalDrawnCards += drawnCardIndexTotal[i];
 		}
 		csvDaily += totalDrawnCards + ",";
 
-		// Tracks collected cards
-		for (int i = 0; i < drawnCardIndex.Length; i++)
+		// Tracks collected cards accumulated
+		for (int i = 0; i < drawnCardIndexTotal.Length; i++)
 		{
-			csvDaily += drawnCardIndex[i].ToString();
-			if (i < drawnCardIndex.Length - 1)
+			csvDaily += drawnCardIndexTotal[i].ToString() + ",";
+		}
+
+		// Tracks collected cards daily
+		for (int i = 0; i < drawnCardIndexDaily.Length; i++)
+		{
+			csvDaily += drawnCardIndexDaily[i].ToString();
+			if (i < drawnCardIndexDaily.Length - 1)
 			{
 				csvDaily += ",";
 			}

@@ -286,10 +286,10 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 			SelectPacksIndividually();
 			csvCreator.SetCurrentDay(j + 1);
 			csvCreator.SetSimulationCounter(currentSimulation);
-			csvCreator.CreateCSVString(dailyDrawnCardIndex, true);
+			csvCreator.CreateCSVString(drawnCardIndex, dailyDrawnCardIndex, true);
 			dailyDrawnCardIndex = new int[dailyDrawnCardIndex.Length];
 		}
-		csvCreator.CreateCSVString(drawnCardIndex, false);
+		csvCreator.CreateCSVString(drawnCardIndex, dailyDrawnCardIndex, false);
 	}
 
 	void SelectPacksIndividually()
