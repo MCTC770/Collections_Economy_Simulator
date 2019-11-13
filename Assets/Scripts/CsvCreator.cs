@@ -155,11 +155,11 @@ public class CsvCreator : MonoBehaviour
 		// Duplicate star counter
 		csvDaily += duplicateStarCounter + ",";
 
-		// Total cards drawn
+		// Daily cards drawn
 		int totalDrawnCards = 0;
-		for (int i = 0; i < drawnCardIndexTotal.Length; i++)
+		for (int i = 0; i < drawnCardIndexDaily.Length; i++)
 		{
-			totalDrawnCards += drawnCardIndexTotal[i];
+			totalDrawnCards += drawnCardIndexDaily[i];
 		}
 		csvDaily += totalDrawnCards + ",";
 

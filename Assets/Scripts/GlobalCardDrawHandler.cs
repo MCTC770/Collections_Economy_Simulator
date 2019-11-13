@@ -6,6 +6,10 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 
 	[SerializeField] int numberOfSimulations;
 	[SerializeField] int numberOfDays;
+	[Space(12)]
+	[SerializeField] bool enableRandomMissedDays;
+	[SerializeField] int rangeOfMissedDaysMin;
+	[SerializeField] int rangeOfMissedDaysMax;
 	[Space (12)]
 	[SerializeField] float[] setCardRarities = new float[5];
 	[SerializeField] float[] packsPerDay = new float[5];
@@ -33,6 +37,9 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	int[] drawnCardIndex;
 	int[] dailyDrawnCardIndex;
 
+	int missedDays;
+	int[] missedDaysPicked;
+
 	int starCounter;
 	int totalPacksThisDay;
 	int packRarityTracker;
@@ -40,6 +47,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	int rarityOfCurrentlyDrawnCard;
 	int getIndexOfDrawnCard;
 	int currentSimulation;
+	int runCounter;
 	bool runCompleted = false;
 
 	string[] fixedPacksPerDay;
@@ -48,11 +56,21 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	int[] numberOfPacksForTheDay = new int[5];
 	int[] numberOfPacksForTheDayInUse;
 	string[] numberOfPacksForTheDayString;
+	bool[] uniqueRandomMissedDays;
 	int[,] cardsPerDayTracker;
 
 	// Use this for initialization
 	void Start ()
 	{
+		if (!enableRandomMissedDays)
+		{
+			rangeOfMissedDaysMin = 0;
+			rangeOfMissedDaysMax = 0;
+		}
+		if (rangeOfMissedDaysMin > rangeOfMissedDaysMax)
+		{
+			rangeOfMissedDaysMax = rangeOfMissedDaysMin;
+		}
 
 		houseCreator = FindObjectOfType<HouseCreator>();
 		cardDrawer = FindObjectOfType<DrawCards>();
@@ -130,6 +148,34 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		cardsOfRarityInPack = new int[5];
 		numberOfPacksForTheDay = new int[5];
 
+		missedDays = Random.Range(rangeOfMissedDaysMin, rangeOfMissedDaysMax + 1);
+		print(missedDays);
+		if(missedDays > 0 && enableRandomMissedDays)
+		{
+			missedDaysPicked = new int[missedDays];
+			uniqueRandomMissedDays = new bool[numberOfDays];
+			for (int i = 0; i < uniqueRandomMissedDays.Length; i++)
+			{
+				uniqueRandomMissedDays[i] = false;
+			}
+			for (int i = 0; i < missedDays; i++)
+			{
+				missedDaysPicked[i] = Random.Range(0, numberOfDays);
+				while (uniqueRandomMissedDays[missedDaysPicked[i]])
+				{
+					missedDaysPicked[i] = Random.Range(0, numberOfDays);
+				}
+				uniqueRandomMissedDays[missedDaysPicked[i]] = true;
+				print("missedDaysPicked[" + i + "]: " + missedDaysPicked[i]);
+			}
+		}
+		else
+		{
+			enableRandomMissedDays = false;
+			print("no days missed");
+		}
+
+
 		weight = cardWeightManager.GetWeightPerRoomArray();
 		for (int i = 0; i < weight.Length; i++)
 		{
@@ -156,7 +202,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	void Update () {
 		if (!runCompleted)
 		{
-			int runCounter = 1;
+			runCounter = 1;
 			csvCreator.CreateHeader();
 			for (int i = 0; i < numberOfSimulations; i++)
 			{
@@ -254,36 +300,46 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 
 		for (int j = 0; j < numberOfDays; j++)
 		{
-			cardWeightManager.SetCurrentNumberOfDays(j + 1);
-			totalPacksThisDay = 0;
 
-			for (int k = 0; k < packSelection.Length; k++)
+			if(enableRandomMissedDays)
 			{
-				totalPacksThisDay += cardsPerDayTracker[j, k];
-				//Debug.Log("cardsPerDayTracker[" + j + ", " + k + "]: " + cardsPerDayTracker[j, k]);
-			}
+				print("numberOfSimulations: " + runCounter + " uniqueRandomMissedDays[" + j + "]: " + uniqueRandomMissedDays[j]);
 
-			packsForTheDay = new PackCreator[totalPacksThisDay];
-
-			for (int k = 0; k < totalPacksThisDay; k++)
-			{
-				for (int l = 0; l < packSelection.Length; l++)
+				if (!uniqueRandomMissedDays[j] && enableRandomMissedDays)
 				{
-					packRarityTracker = cardsPerDayTracker[j, l];
+					cardWeightManager.SetCurrentNumberOfDays(j + 1);
+					totalPacksThisDay = 0;
 
-					for (int m = 0; m < packRarityTracker; m++)
+					for (int k = 0; k < packSelection.Length; k++)
 					{
-						packsForTheDay[k] = packSelection[l];
-						k++;
+						totalPacksThisDay += cardsPerDayTracker[j, k];
+						//Debug.Log("cardsPerDayTracker[" + j + ", " + k + "]: " + cardsPerDayTracker[j, k]);
+					}
 
-						if (k >= totalPacksThisDay)
+					packsForTheDay = new PackCreator[totalPacksThisDay];
+
+					for (int k = 0; k < totalPacksThisDay; k++)
+					{
+						for (int l = 0; l < packSelection.Length; l++)
 						{
-							k = totalPacksThisDay - 1;
+							packRarityTracker = cardsPerDayTracker[j, l];
+
+							for (int m = 0; m < packRarityTracker; m++)
+							{
+								packsForTheDay[k] = packSelection[l];
+								k++;
+
+								if (k >= totalPacksThisDay)
+								{
+									k = totalPacksThisDay - 1;
+								}
+							}
 						}
 					}
+					SelectPacksIndividually();
 				}
 			}
-			SelectPacksIndividually();
+
 			csvCreator.SetCurrentDay(j + 1);
 			csvCreator.SetSimulationCounter(currentSimulation);
 			csvCreator.CreateCSVString(drawnCardIndex, dailyDrawnCardIndex, true);
