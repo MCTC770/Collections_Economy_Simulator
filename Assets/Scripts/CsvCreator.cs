@@ -12,6 +12,7 @@ public class CsvCreator : MonoBehaviour
 
 	string csvTotal;
 	string csvDaily;
+	string currentTime;
 
 	int currentDay = 0;
 	int runCounter = 0;
@@ -24,6 +25,9 @@ public class CsvCreator : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		currentTime = System.DateTime.Now.ToString();
+		currentTime = currentTime.Replace("/", "-");
+		currentTime = currentTime.Replace(":", "-");
 		housecreator = FindObjectOfType<HouseCreator>();
 		globalCardDrawHandler = FindObjectOfType<GlobalCardDrawHandler>();
 	}
@@ -180,11 +184,11 @@ public class CsvCreator : MonoBehaviour
 	{
 		if (totalLog)
 		{
-			System.IO.File.WriteAllText(Application.dataPath + "/" + fileNameTotalLog + ".csv", csvTotal);
+			System.IO.File.WriteAllText(Application.dataPath + "/" + fileNameTotalLog + " - " + currentTime + ".csv", csvTotal);
 		}
 		if (dailyLog)
 		{
-			System.IO.File.WriteAllText(Application.dataPath + "/" + fileNameDailyLog + ".csv", csvDaily);
+			System.IO.File.WriteAllText(Application.dataPath + "/" + fileNameDailyLog + " - " + currentTime + ".csv", csvDaily);
 		}
 	}
 

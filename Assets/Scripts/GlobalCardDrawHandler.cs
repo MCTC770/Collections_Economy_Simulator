@@ -196,7 +196,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 					endNum[i] += 1;
 					currentCardNum -= 1;
 				}
-				if (currentCardNum > 0)
+				if (currentCardNum > 0.00001)
 				{
 					float randomNum = Random.Range(0f, 1f);
 					if (randomNum >= currentCardNum)
