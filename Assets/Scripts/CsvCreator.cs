@@ -184,11 +184,11 @@ public class CsvCreator : MonoBehaviour
 	{
 		if (totalLog)
 		{
-			System.IO.File.WriteAllText(Application.dataPath + "/" + fileNameTotalLog + " - " + currentTime + ".csv", csvTotal);
+			System.IO.File.WriteAllText(Application.dataPath + "/CSVs/" + fileNameTotalLog + " - " + currentTime + ".csv", csvTotal);
 		}
 		if (dailyLog)
 		{
-			System.IO.File.WriteAllText(Application.dataPath + "/" + fileNameDailyLog + " - " + currentTime + ".csv", csvDaily);
+			System.IO.File.WriteAllText(Application.dataPath + "/CSVs/" + fileNameDailyLog + " - " + currentTime + ".csv", csvDaily);
 		}
 	}
 

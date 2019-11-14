@@ -24,6 +24,7 @@ public class CardManager : MonoBehaviour {
 	bool reset = false;
 	float accumulatedChances = 0;
 	[SerializeField] float accumulatedWeights;
+	int[] cardsOfDrawnRarityExternal;
 
 	// Use this for initialization
 	void Start () {
@@ -73,12 +74,12 @@ public class CardManager : MonoBehaviour {
 				cardWeightIndex[counter] += houseCreator.houseCardWeightIndex[i];
 				accumulatedWeights += cardWeightIndex[counter];
 			}
-			
+
 		}
 
 		for (int i = 0; i < cardsOfDrawnRarity.Length; i++)
 		{
-			if(cardWeightIndex[i] > 0)
+			if (cardWeightIndex[i] > 0)
 			{
 				drawChancesBasedOnWeight[i] = cardWeightIndex[i] / accumulatedWeights;
 			}
@@ -118,5 +119,35 @@ public class CardManager : MonoBehaviour {
 		Debug.LogError("No card of drawn rarity available");
 		Debug.Break();
 		return 99999;
+	}
+
+	public void CreateIndexPerCardRarity(int cardRarity)
+	{
+		int counter = -1;
+		for (int i = 0; i < houseCreator.houseCardNumberIndex.Length; i++)
+		{
+			if (houseCreator.houseCardRarityIndex[i] == cardRarity)
+			{
+				++counter;
+			}
+		}
+
+		cardsOfDrawnRarityExternal = new int[counter + 1];
+		counter = -1;
+
+		for (int i = 0; i < houseCreator.houseCardNumberIndex.Length; i++)
+		{
+			if (houseCreator.houseCardRarityIndex[i] == cardRarity)
+			{
+				++counter;
+				cardsOfDrawnRarityExternal[counter] = houseCreator.houseCardNumberIndex[i];
+			}
+
+		}
+	}
+
+	public int[] GetCardsOfDrawnRarity()
+	{
+		return cardsOfDrawnRarityExternal;
 	}
 }
