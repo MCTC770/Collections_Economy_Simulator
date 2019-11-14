@@ -7,18 +7,17 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	[SerializeField] int numberOfSimulations;
 	[SerializeField] int numberOfDays;
 	[Space(12)]
+	[SerializeField] float[] setCardRarities = new float[5];
+	[SerializeField] float[] packsPerDay = new float[5];
+	[SerializeField] PackCreator[] packSelection;
+	[Space(12)]
 	[SerializeField] bool enableRandomMissedDays;
 	[SerializeField] int rangeOfMissedDaysMin;
 	[SerializeField] int rangeOfMissedDaysMax;
 	[Space(12)]
 	[SerializeField] bool guaranteedRarityEnabled;
-	[SerializeField] [Range(1, 5)] int guaranteedRarityAfterDays;
+	[SerializeField] [Range(1, 5)] int guaranteedRarity;
 	[SerializeField] int dayOfGuaranteedRarity;
-	[SerializeField] int[] cardsOfSelectedRarity;
-	[Space(12)]
-	[SerializeField] float[] setCardRarities = new float[5];
-	[SerializeField] float[] packsPerDay = new float[5];
-	[SerializeField] PackCreator[] packSelection;
 
 	string defaultNumberOfSimulations;
 	string defaultNumberOfDays;
@@ -31,6 +30,9 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	HouseCreator houseCreator;
 	CsvCreator csvCreator;
 	CardWeightManager cardWeightManager;
+
+	string initialDayOfGuaranteedRarity;
+	int[] cardsOfSelectedRarity;
 
 	float currentCardNum;
 	int[] endNum;
@@ -86,6 +88,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		cardWeightManager = FindObjectOfType<CardWeightManager>();
 
 		starCounter = 0;
+		initialDayOfGuaranteedRarity = dayOfGuaranteedRarity.ToString();
 
 		defaultNumberOfSimulations = numberOfSimulations.ToString();
 		defaultNumberOfDays = numberOfDays.ToString();
@@ -148,6 +151,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		cardWeightManager.ShiftStepIterationCounterInitializer();
 
 		currentSimulation += 1;
+		dayOfGuaranteedRarity = int.Parse(initialDayOfGuaranteedRarity);
 		forcedRarityDrawn = false;
 		overwriteRarity = false;
 		endNum = new int[packsPerDay.Length];
@@ -310,7 +314,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		{
 			if (guaranteedRarityEnabled && dayOfGuaranteedRarity == j + 1)
 			{
-				cardManager.CreateIndexPerCardRarity(guaranteedRarityAfterDays);
+				cardManager.CreateIndexPerCardRarity(guaranteedRarity);
 				cardsOfSelectedRarity = cardManager.GetCardsOfDrawnRarity();
 				int cardsOfRarityCounter = 0;
 				for (int i = 0; i < cardsOfSelectedRarity.Length; i++)
@@ -332,11 +336,15 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 				if (!uniqueRandomMissedDays[j])
 				{
 					PackDistributionPerDay(j);
+				} else
+				{
+					++dayOfGuaranteedRarity;
 				}
 			} else
 			{
 				PackDistributionPerDay(j);
 			}
+			print(dayOfGuaranteedRarity);
 
 			csvCreator.SetCurrentDay(j + 1);
 			csvCreator.SetSimulationCounter(currentSimulation);
@@ -411,7 +419,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 
 				if (overwriteRarity && !forcedRarityDrawn)
 				{
-					rarityOfCurrentlyDrawnCard = guaranteedRarityAfterDays;
+					rarityOfCurrentlyDrawnCard = guaranteedRarity;
 					forcedRarityDrawn = true;
 					overwriteRarity = false;
 					print("rarity: " + rarityOfCurrentlyDrawnCard);
