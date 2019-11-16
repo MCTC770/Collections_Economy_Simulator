@@ -378,12 +378,12 @@ Prefab:
     - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
         type: 2}
       propertyPath: weightPerRoomArray.Array.data[0]
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
         type: 2}
       propertyPath: weightPerRoomArray.Array.data[1]
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
         type: 2}
@@ -394,6 +394,56 @@ Prefab:
         type: 2}
       propertyPath: weightChangeByProgress
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
+        type: 2}
+      propertyPath: weightPerCard
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
+        type: 2}
+      propertyPath: shiftCardProgressSteps
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
+        type: 2}
+      propertyPath: weightChangeByDays
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
+        type: 2}
+      propertyPath: shiftSequenceInDays
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
+        type: 2}
+      propertyPath: shiftRoomProgressSteps
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
+        type: 2}
+      propertyPath: shiftSteps
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
+        type: 2}
+      propertyPath: weightPerRoomArray.Array.data[2]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
+        type: 2}
+      propertyPath: weightPerRoomArray.Array.data[3]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
+        type: 2}
+      propertyPath: weightPerRoomArray.Array.data[4]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114639981466703218, guid: 773e22ca4ad724b4287d545941c57735,
+        type: 2}
+      propertyPath: weightPerRoomArray.Array.data[5]
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 773e22ca4ad724b4287d545941c57735, type: 2}
@@ -520,6 +570,31 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114189585712051424, guid: 846978154ab15b84fa59cae4ec610003,
+        type: 2}
+      propertyPath: perCardInfo
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114189585712051424, guid: 846978154ab15b84fa59cae4ec610003,
+        type: 2}
+      propertyPath: fileNamesettingsLog
+      value: SettingsLog
+      objectReference: {fileID: 0}
+    - target: {fileID: 114189585712051424, guid: 846978154ab15b84fa59cae4ec610003,
+        type: 2}
+      propertyPath: dailyLog
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114189585712051424, guid: 846978154ab15b84fa59cae4ec610003,
+        type: 2}
+      propertyPath: settingsLog
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114189585712051424, guid: 846978154ab15b84fa59cae4ec610003,
+        type: 2}
+      propertyPath: totalLog
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 846978154ab15b84fa59cae4ec610003, type: 2}
   m_IsPrefabAsset: 0
@@ -575,12 +650,12 @@ Prefab:
     - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
         type: 2}
       propertyPath: numberOfSimulations
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
         type: 2}
       propertyPath: numberOfDays
-      value: 50
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 114051830759610056, guid: 1a2a3641cdd7e704c89a1e4786443ea6,
         type: 2}

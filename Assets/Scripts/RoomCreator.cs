@@ -103,6 +103,14 @@ public class RoomCreator : ScriptableObject {
 		}
 	}
 
+	public void SetWeightOfCardsInRoom()
+	{
+		for (int i = 0; i < weightOfCardsInRoom.Length; i++)
+		{
+			weightOfCardsInRoom[i] = weight;
+		}
+	}
+
 	/*public void CheckForRoomCompletion()
 	{
 		roomCompled = false;

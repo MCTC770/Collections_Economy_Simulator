@@ -7,8 +7,13 @@ public class CsvCreator : MonoBehaviour
 
 	[SerializeField] string fileNameTotalLog;
 	[SerializeField] string fileNameDailyLog;
+	[SerializeField] string fileNamesettingsLog;
+	[Space (12)]
 	[SerializeField] bool totalLog = false;
 	[SerializeField] bool dailyLog = false;
+	[SerializeField] bool settingsLog = false;
+	[Space(12)]
+	[SerializeField] bool perCardInfo = false;
 
 	string csvTotal;
 	string csvDaily;
@@ -45,6 +50,10 @@ public class CsvCreator : MonoBehaviour
 
 	public void CreateHeader()
 	{
+		if (settingsLog)
+		{
+			CreateSettingsLog();
+		}
 		if (totalLog)
 		{
 			csvTotal += "Simulation,";
@@ -52,13 +61,18 @@ public class CsvCreator : MonoBehaviour
 			csvTotal += "Duplicate Stars,";
 			csvTotal += "Total Cards,";
 			csvTotal += "Avg Cards/Day,";
-			csvTotal += "Unique Cards,";
-			for (int i = 0; i < housecreator.houseCardIsCollectedIndex.Length; i++)
+			csvTotal += "Unique Cards";
+			if (perCardInfo)
 			{
-				csvTotal += "Card" + (i + 1);
-				if (i < housecreator.houseCardIsCollectedIndex.Length - 1)
+				csvTotal += ",";
+
+				for (int i = 0; i < housecreator.houseCardIsCollectedIndex.Length; i++)
 				{
-					csvTotal += ",";
+					csvTotal += "Card" + (i + 1);
+					if (i < housecreator.houseCardIsCollectedIndex.Length - 1)
+					{
+						csvTotal += ",";
+					}
 				}
 			}
 		}
@@ -67,17 +81,22 @@ public class CsvCreator : MonoBehaviour
 			csvDaily += "Simulation,";
 			csvDaily += "Days,";
 			csvDaily += "Duplicate Stars,";
-			csvDaily += "Daily Cards,";
-			for (int i = 0; i < housecreator.houseCardIsCollectedIndex.Length; i++)
+			csvDaily += "Daily Cards";
+			if (perCardInfo)
 			{
-				csvDaily += "Card" + (i + 1) + ",";
-			}
-			for (int i = 0; i < housecreator.houseCardIsCollectedIndex.Length; i++)
-			{
-				csvDaily += "Card" + (i + 1) + " Daily";
-				if (i < housecreator.houseCardIsCollectedIndex.Length - 1)
+				csvDaily += ",";
+
+				for (int i = 0; i < housecreator.houseCardIsCollectedIndex.Length; i++)
 				{
-					csvDaily += ",";
+					csvDaily += "Card" + (i + 1) + ",";
+				}
+				for (int i = 0; i < housecreator.houseCardIsCollectedIndex.Length; i++)
+				{
+					csvDaily += "Card" + (i + 1) + " Daily";
+					if (i < housecreator.houseCardIsCollectedIndex.Length - 1)
+					{
+						csvDaily += ",";
+					}
 				}
 			}
 		}
@@ -129,15 +148,20 @@ public class CsvCreator : MonoBehaviour
 				++totalUniqueCardsDrawn;
 			}
 		}
-		csvTotal += totalUniqueCardsDrawn + ",";
+		csvTotal += totalUniqueCardsDrawn;
 
-		// Tracks collected cards
-		for (int i = 0; i < drawnCardIndex.Length; i++)
+		if (perCardInfo)
 		{
-			csvTotal += drawnCardIndex[i].ToString();
-			if (i < drawnCardIndex.Length - 1)
+			csvTotal += ",";
+
+			// Tracks collected cards
+			for (int i = 0; i < drawnCardIndex.Length; i++)
 			{
-				csvTotal += ",";
+				csvTotal += drawnCardIndex[i].ToString();
+				if (i < drawnCardIndex.Length - 1)
+				{
+					csvTotal += ",";
+				}
 			}
 		}
 	}
@@ -161,23 +185,29 @@ public class CsvCreator : MonoBehaviour
 		{
 			totalDrawnCards += drawnCardIndexDaily[i];
 		}
-		csvDaily += totalDrawnCards + ",";
+		csvDaily += totalDrawnCards;
 
-		// Tracks collected cards accumulated
-		for (int i = 0; i < drawnCardIndexTotal.Length; i++)
+		if (perCardInfo)
 		{
-			csvDaily += drawnCardIndexTotal[i].ToString() + ",";
-		}
+			csvDaily += ",";
 
-		// Tracks collected cards daily
-		for (int i = 0; i < drawnCardIndexDaily.Length; i++)
-		{
-			csvDaily += drawnCardIndexDaily[i].ToString();
-			if (i < drawnCardIndexDaily.Length - 1)
+			// Tracks collected cards accumulated
+			for (int i = 0; i < drawnCardIndexTotal.Length; i++)
 			{
-				csvDaily += ",";
+				csvDaily += drawnCardIndexTotal[i].ToString() + ",";
+			}
+
+			// Tracks collected cards daily
+			for (int i = 0; i < drawnCardIndexDaily.Length; i++)
+			{
+				csvDaily += drawnCardIndexDaily[i].ToString();
+				if (i < drawnCardIndexDaily.Length - 1)
+				{
+					csvDaily += ",";
+				}
 			}
 		}
+
 	}
 
 	public void CreateCSVFile()
@@ -190,6 +220,16 @@ public class CsvCreator : MonoBehaviour
 		{
 			System.IO.File.WriteAllText(Application.dataPath + "/CSVs/" + fileNameDailyLog + " - " + currentTime + ".csv", csvDaily);
 		}
+		Debug.Log("Simulation(s) complete!");
+	}
+
+	public void CreateSettingsLog()
+	{
+		string logTXT;
+
+		logTXT = globalCardDrawHandler.GetSettingsValues();
+
+		System.IO.File.WriteAllText(Application.dataPath + "/CSVs/" + fileNamesettingsLog + " - " + currentTime + ".txt", logTXT);
 	}
 
 	public void SetDuplicateStarCounter(int stars)

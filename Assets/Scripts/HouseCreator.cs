@@ -26,7 +26,6 @@ public class HouseCreator : MonoBehaviour {
 		houseCardNumberIndex = new int[houseCardRarityIndex.Length];
 
 		CreateCardIndex();
-		CreateJson();
 	}
 
 	public RoomCreator[] GetRoomsInThisHouse()
@@ -80,37 +79,17 @@ public class HouseCreator : MonoBehaviour {
 		}
 	}
 
-	void CreateJson()
+	public void SetHouseCardWeightIndex()
 	{
+		int h = 0;
+		for (int j = 0; j < roomsInThisHouse.Length; j++)
 		{
-			cardIndex = new CardIndex[houseCardNumberIndex.Length];
-
-			for (int i = 0; i < houseCardNumberIndex.Length; i++)
+			for (int i = 0; i < roomsInThisHouse[j].indexNumber.Length; i++)
 			{
-				cardIndex[i] = new CardIndex();
-
-				cardIndex[i].indexNum = houseCardNumberIndex[i];
-				cardIndex[i].rarity = houseCardRarityIndex[i];
-				cardIndex[i].isColleted = houseCardIsCollectedIndex[i];
-
-				if (json == null)
-				{
-					json = "{\"index\":{";
-					json += "\"" + i + "\"" + ":";
-					json += JsonUtility.ToJson(cardIndex[i]);
-				}
-				else
-				{
-					json += ",\"" + i + "\":" + JsonUtility.ToJson(cardIndex[i]);
-				}
-
+				houseCardWeightIndex[h] = roomsInThisHouse[j].weightOfCardsInRoom[i];
+				h++;
 			}
-
-			json += "}}";
-
-			System.IO.File.WriteAllText(Application.dataPath + "/CardInfo.json", json);
-			//print(Application.dataPath);
 		}
+		h = 0;
 	}
-
 }

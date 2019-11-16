@@ -145,6 +145,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		}
 
 		houseCreator.ResetCardIndex();
+		//houseCreator.CreateCardIndex();
 		cardManager.InitializeDuplicateStarCounter();
 		starCounter = 0;
 		cardWeightManager.SetInitialWeightArrayValues();
@@ -192,6 +193,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		for (int i = 0; i < weight.Length; i++)
 		{
 			houseCreator.GetRoomsInThisHouse()[i].weight = weight[i];
+			houseCreator.GetRoomsInThisHouse()[i].SetWeightOfCardsInRoom();
 		}
 
 		for (int i = 0; i < setCardRarities.Length; i++)
@@ -323,7 +325,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 					{
 						++cardsOfRarityCounter;
 					}
-					Debug.Log("j: " + j + " cardsOfSelectedRarity[" + i + "]: " + cardsOfSelectedRarity[i] + " cardsOfRarityCounter: " + cardsOfRarityCounter);
+					//Debug.Log("j: " + j + " cardsOfSelectedRarity[" + i + "]: " + cardsOfSelectedRarity[i] + " cardsOfRarityCounter: " + cardsOfRarityCounter);
 				}
 				if (cardsOfRarityCounter == 0)
 				{
@@ -344,7 +346,6 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 			{
 				PackDistributionPerDay(j);
 			}
-			print(dayOfGuaranteedRarity);
 
 			csvCreator.SetCurrentDay(j + 1);
 			csvCreator.SetSimulationCounter(currentSimulation);
@@ -422,7 +423,6 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 					rarityOfCurrentlyDrawnCard = guaranteedRarity;
 					forcedRarityDrawn = true;
 					overwriteRarity = false;
-					print("rarity: " + rarityOfCurrentlyDrawnCard);
 				}
 				else
 				{
@@ -430,7 +430,6 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 				}
 
 				getIndexOfDrawnCard = cardManager.DrawCardFromIndexBasedOnRarity(rarityOfCurrentlyDrawnCard);
-				print("getIndexOfDrawnCard: " + getIndexOfDrawnCard);
 				drawnCardIndex[getIndexOfDrawnCard] += 1;
 				dailyDrawnCardIndex[getIndexOfDrawnCard] += 1;
 				cardsOfRarityInPack[i] -= 1;
@@ -465,5 +464,58 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		{
 			setCardRarities[i] = defaultCardRarities[i];
 		}
+	}
+
+	public string GetSettingsValues()
+	{
+		string returnedTXT;
+
+		returnedTXT = "GlobalCardDrawHandler: ";
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "numberOfSimulations: " + numberOfSimulations;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "numberOfDays: " + numberOfDays;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "setCardRarities: ";
+		returnedTXT += System.Environment.NewLine;
+
+		for (int i = 0; i < setCardRarities.Length; i++)
+		{
+			returnedTXT += "[" + i + "]: " + setCardRarities[i];
+			returnedTXT += System.Environment.NewLine;
+		}
+
+		returnedTXT += "packsPerDay: ";
+		returnedTXT += System.Environment.NewLine;
+
+		for (int i = 0; i < packsPerDay.Length; i++)
+		{
+			returnedTXT += "[" + i + "]: " + packsPerDay[i];
+			returnedTXT += System.Environment.NewLine;
+		}
+
+		returnedTXT += "packSelection: ";
+		returnedTXT += System.Environment.NewLine;
+
+		for (int i = 0; i < packSelection.Length; i++)
+		{
+			returnedTXT += "[" + i + "]: " + packSelection[i];
+			returnedTXT += System.Environment.NewLine;
+		}
+
+		returnedTXT += "enableRandomMissedDays: " + enableRandomMissedDays;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "rangeOfMissedDaysMin: " + rangeOfMissedDaysMin;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "rangeOfMissedDaysMax: " + rangeOfMissedDaysMax;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "guaranteedRarityEnabled: " + guaranteedRarityEnabled;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "guaranteedRarity: " + guaranteedRarity;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "dayOfGuaranteedRarity: " + dayOfGuaranteedRarity;
+
+		return returnedTXT;
 	}
 }
