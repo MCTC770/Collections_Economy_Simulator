@@ -412,10 +412,6 @@ public class CardWeightManager : MonoBehaviour {
 
 		for (int i = 0; i < weightPerRoomArray.Length; i++)
 		{
-			print("days: " + currentNumberOfDays);
-			print("(countRoomsCompleted - shiftRoomProgressSteps): " + (countRoomsCompleted - shiftRoomProgressSteps) + " previousRoomsCompleted: " + previousRoomsCompleted);
-			print("countRoomsCompleted: " + countRoomsCompleted + " shiftRoomProgressSteps: " + shiftRoomProgressSteps);
-
 			if ((countRoomsCompleted - shiftRoomProgressSteps) >= previousRoomsCompleted)
 			{
 
