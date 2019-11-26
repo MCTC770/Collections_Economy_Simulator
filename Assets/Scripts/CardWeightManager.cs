@@ -69,7 +69,7 @@ public class CardWeightManager : MonoBehaviour {
 		}
 		else
 		{
-			timeLocksEnabled = false;
+			//timeLocksEnabled = false;
 		}
 
 		if (weightChangeByDays == true)
@@ -228,6 +228,10 @@ public class CardWeightManager : MonoBehaviour {
 			}
 			TimeLockRooms();
 		}
+		else
+		{
+			TimeLockRooms();
+		}
 	}
 
 	private void TimeLockRooms()
@@ -242,7 +246,7 @@ public class CardWeightManager : MonoBehaviour {
 
 			for (int i = 0; i < daysUntilRoomUnlock.Length; i++)
 			{
-				if (daysUntilRoomUnlock[i] >= currentNumberOfDays)
+				if (daysUntilRoomUnlock[i] - 1 >= currentNumberOfDays)
 				{
 					weightPerRoomArray[i] = 0;
 				}
@@ -290,6 +294,7 @@ public class CardWeightManager : MonoBehaviour {
 			//print("currentNumberOfDays: " + currentNumberOfDays + " shiftCalculator: " + shiftCalculator + " weightPerRoomArray[" + i + "]: " + weightPerRoomArray[i]);
 		}
 		//print("---");
+		houseCreator.SetHouseCardWeightIndex();
 	}
 
 	private void CalculateWeightChanceByDayPerCard()
