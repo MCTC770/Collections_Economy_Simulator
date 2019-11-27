@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GlobalCardDrawHandler : MonoBehaviour {
+public class GlobalCardDrawHandler : MonoBehaviour
+{
 
 	[SerializeField] int numberOfSimulations;
 	[SerializeField] int numberOfDays;
@@ -69,7 +70,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	int[,] cardsPerDayTracker;
 
 	// Use this for initialization
-	void Start ()
+	void Start()
 	{
 		if (!enableRandomMissedDays)
 		{
@@ -163,7 +164,7 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		numberOfPacksForTheDay = new int[5];
 
 		missedDays = Random.Range(rangeOfMissedDaysMin, rangeOfMissedDaysMax + 1);
-		if(missedDays > 0 && enableRandomMissedDays)
+		if (missedDays > 0 && enableRandomMissedDays)
 		{
 			missedDaysPicked = new int[missedDays];
 			uniqueRandomMissedDays = new bool[numberOfDays];
@@ -213,7 +214,8 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
+	void Update()
+	{
 		if (!runCompleted)
 		{
 			runCounter = 1;
@@ -338,11 +340,13 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 				if (!uniqueRandomMissedDays[j])
 				{
 					PackDistributionPerDay(j);
-				} else
+				}
+				else
 				{
 					++dayOfGuaranteedRarity;
 				}
-			} else
+			}
+			else
 			{
 				PackDistributionPerDay(j);
 			}
@@ -515,6 +519,33 @@ public class GlobalCardDrawHandler : MonoBehaviour {
 		returnedTXT += "guaranteedRarity: " + guaranteedRarity;
 		returnedTXT += System.Environment.NewLine;
 		returnedTXT += "dayOfGuaranteedRarity: " + dayOfGuaranteedRarity;
+
+		return returnedTXT;
+	}
+
+	public string GetPackValues()
+	{
+		string returnedTXT;
+
+		returnedTXT = "Packs:";
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += System.Environment.NewLine;
+
+		for (int i = 0; i < packSelection.Length; i++)
+		{
+			returnedTXT += "Pack[" + i + "]: " + packSelection[i].name;
+			returnedTXT += System.Environment.NewLine;
+			returnedTXT += "numberOf1StarCards: " + packSelection[i].numberOf1StarCards;
+			returnedTXT += System.Environment.NewLine;
+			returnedTXT += "numberOf2StarCards: " + packSelection[i].numberOf2StarCards;
+			returnedTXT += System.Environment.NewLine;
+			returnedTXT += "numberOf3StarCards: " + packSelection[i].numberOf3StarCards;
+			returnedTXT += System.Environment.NewLine;
+			returnedTXT += "numberOf4StarCards: " + packSelection[i].numberOf4StarCards;
+			returnedTXT += System.Environment.NewLine;
+			returnedTXT += "numberOf5StarCards: " + packSelection[i].numberOf5StarCards;
+			returnedTXT += System.Environment.NewLine;
+		}
 
 		return returnedTXT;
 	}

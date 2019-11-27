@@ -24,8 +24,9 @@ public class CsvCreator : MonoBehaviour
 	int simulationCounter = 0;
 	int duplicateStarCounter = 0;
 
-	HouseCreator housecreator;
+	HouseCreator houseCreator;
 	GlobalCardDrawHandler globalCardDrawHandler;
+	CardWeightManager cardWeightManager;
 
 	// Use this for initialization
 	void Start()
@@ -33,8 +34,9 @@ public class CsvCreator : MonoBehaviour
 		currentTime = System.DateTime.Now.ToString();
 		currentTime = currentTime.Replace("/", "-");
 		currentTime = currentTime.Replace(":", "-");
-		housecreator = FindObjectOfType<HouseCreator>();
+		houseCreator = FindObjectOfType<HouseCreator>();
 		globalCardDrawHandler = FindObjectOfType<GlobalCardDrawHandler>();
+		cardWeightManager = FindObjectOfType<CardWeightManager>();
 	}
 
 	// Update is called once per frame
@@ -66,10 +68,10 @@ public class CsvCreator : MonoBehaviour
 			{
 				csvTotal += ",";
 
-				for (int i = 0; i < housecreator.houseCardIsCollectedIndex.Length; i++)
+				for (int i = 0; i < houseCreator.houseCardIsCollectedIndex.Length; i++)
 				{
 					csvTotal += "Card" + (i + 1);
-					if (i < housecreator.houseCardIsCollectedIndex.Length - 1)
+					if (i < houseCreator.houseCardIsCollectedIndex.Length - 1)
 					{
 						csvTotal += ",";
 					}
@@ -86,14 +88,14 @@ public class CsvCreator : MonoBehaviour
 			{
 				csvDaily += ",";
 
-				for (int i = 0; i < housecreator.houseCardIsCollectedIndex.Length; i++)
+				for (int i = 0; i < houseCreator.houseCardIsCollectedIndex.Length; i++)
 				{
 					csvDaily += "Card" + (i + 1) + ",";
 				}
-				for (int i = 0; i < housecreator.houseCardIsCollectedIndex.Length; i++)
+				for (int i = 0; i < houseCreator.houseCardIsCollectedIndex.Length; i++)
 				{
 					csvDaily += "Card" + (i + 1) + " Daily";
-					if (i < housecreator.houseCardIsCollectedIndex.Length - 1)
+					if (i < houseCreator.houseCardIsCollectedIndex.Length - 1)
 					{
 						csvDaily += ",";
 					}
@@ -228,6 +230,18 @@ public class CsvCreator : MonoBehaviour
 		string logTXT;
 
 		logTXT = globalCardDrawHandler.GetSettingsValues();
+		logTXT += System.Environment.NewLine;
+		logTXT += System.Environment.NewLine;
+		logTXT += System.Environment.NewLine;
+		logTXT += cardWeightManager.GetSettingsValues();
+		logTXT += System.Environment.NewLine;
+		logTXT += System.Environment.NewLine;
+		logTXT += System.Environment.NewLine;
+		logTXT += globalCardDrawHandler.GetPackValues();
+		logTXT += System.Environment.NewLine;
+		logTXT += System.Environment.NewLine;
+		logTXT += System.Environment.NewLine;
+		logTXT += houseCreator.GetRoomValues();
 
 		System.IO.File.WriteAllText(Application.dataPath + "/CSVs/" + fileNamesettingsLog + " - " + currentTime + ".txt", logTXT);
 	}

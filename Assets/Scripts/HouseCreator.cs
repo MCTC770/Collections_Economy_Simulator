@@ -92,4 +92,39 @@ public class HouseCreator : MonoBehaviour {
 		}
 		h = 0;
 	}
+
+	public string GetRoomValues()
+	{
+		string returnedTXT;
+
+		returnedTXT = "Rooms:";
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += System.Environment.NewLine;
+
+		for (int i = 0; i < roomsInThisHouse.Length; i++)
+		{
+			returnedTXT += "Room[" + i + "]: " + roomsInThisHouse[i].name;
+			returnedTXT += System.Environment.NewLine;
+			returnedTXT += "oneStarCardsInRoom: " + roomsInThisHouse[i].oneStarCardsInRoom;
+			returnedTXT += System.Environment.NewLine;
+			returnedTXT += "twoStarCardsInRoom: " + roomsInThisHouse[i].twoStarCardsInRoom;
+			returnedTXT += System.Environment.NewLine;
+			returnedTXT += "threeStarCardsInRoom: " + roomsInThisHouse[i].threeStarCardsInRoom;
+			returnedTXT += System.Environment.NewLine;
+			returnedTXT += "fourStarCardsInRoom: " + roomsInThisHouse[i].fourStarCardsInRoom;
+			returnedTXT += System.Environment.NewLine;
+			returnedTXT += "fiveStarCardsInRoom: " + roomsInThisHouse[i].fiveStarCardsInRoom;
+			returnedTXT += System.Environment.NewLine;
+			returnedTXT += "index:";
+			returnedTXT += System.Environment.NewLine;
+
+			for (int j = 0; j < roomsInThisHouse[i].indexNumber.Length; j++)
+			{
+				returnedTXT += "indexNumber[" + j + "]: " + roomsInThisHouse[i].indexNumber[j] + " rarity:[" + j + "]: " + roomsInThisHouse[i].rarity[j];
+				returnedTXT += System.Environment.NewLine;
+			}
+		}
+
+		return returnedTXT;
+	}
 }

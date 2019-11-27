@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardWeightManager : MonoBehaviour {
+public class CardWeightManager : MonoBehaviour
+{
 
 	public bool weightPerRoom = true;
 	[SerializeField] bool weightPerCard;
@@ -40,7 +41,8 @@ public class CardWeightManager : MonoBehaviour {
 	HouseCreator houseCreator;
 
 	// Use this for initialization
-	void Start () {
+	void Start()
+	{
 		houseCreator = FindObjectOfType<HouseCreator>();
 		globalCardDrawHandler = FindObjectOfType<GlobalCardDrawHandler>();
 		if (!weightPerRoom)
@@ -91,7 +93,8 @@ public class CardWeightManager : MonoBehaviour {
 			{
 				weightPerRoomArray[i] = float.Parse(initialWeightPerRoomArray[i]);
 			}
-		} else
+		}
+		else
 		{
 			for (int i = 0; i < weightPerRoomArray.Length; i++)
 			{
@@ -365,7 +368,8 @@ public class CardWeightManager : MonoBehaviour {
 		{
 			previousRoomsCompleted += shiftRoomProgressSteps;
 			shiftHappened = false;
-		} else
+		}
+		else
 		{
 			previousRoomsCompleted = nextRoomCompleted;
 		}
@@ -445,5 +449,58 @@ public class CardWeightManager : MonoBehaviour {
 
 		houseCreator.SetHouseCardWeightIndex();
 		//print("---");
+	}
+
+	public string GetSettingsValues()
+	{
+		string returnedTXT;
+
+		returnedTXT = "CardWeightManager: ";
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "weightPerRoom: " + weightPerRoom;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "weightPerRoomArray: ";
+
+		for (int i = 0; i < weightPerRoomArray.Length; i++)
+		{
+			returnedTXT += System.Environment.NewLine;
+			returnedTXT += "[" + i + "]: " + weightPerRoomArray[i];
+		}
+
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "weightPerCard: " + weightPerCard;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "weightPerCardArray: ";
+
+		for (int i = 0; i < weightPerCardArray.Length; i++)
+		{
+			returnedTXT += System.Environment.NewLine;
+			returnedTXT += "[" + i + "]: " + weightPerCardArray[i];
+		}
+
+		returnedTXT += "weightChangeByDays: " + weightChangeByDays;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "weightChangeByDays: " + weightChangeByProgress;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "shiftSequenceInDays: " + shiftSequenceInDays;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "shiftSteps: " + shiftSteps;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "shiftCardProgressSteps: " + shiftCardProgressSteps;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "shiftRoomProgressSteps: " + shiftRoomProgressSteps;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "timeLocksEnabled: " + timeLocksEnabled;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "daysUntilRoomUnlock: ";
+
+		for (int i = 0; i < daysUntilRoomUnlock.Length; i++)
+		{
+			returnedTXT += System.Environment.NewLine;
+			returnedTXT += "[" + i + "]: " + daysUntilRoomUnlock[i];
+		}
+
+		return returnedTXT;
 	}
 }

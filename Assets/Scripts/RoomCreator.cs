@@ -6,12 +6,12 @@ using UnityEngine;
 public class RoomCreator : ScriptableObject {
 
 	public float weight;
-	[SerializeField] int OneStarCardsInRoom;
-	[SerializeField] int TwoStarCardsInRoom;
-	[SerializeField] int ThreeStarCardsInRoom;
-	[SerializeField] int FourStarCardsInRoom;
-	[SerializeField] int FiveStarCardsInRoom;
-	[SerializeField] int totalCardsInRoom;
+	public int oneStarCardsInRoom;
+	public int twoStarCardsInRoom;
+	public int threeStarCardsInRoom;
+	public int fourStarCardsInRoom;
+	public int fiveStarCardsInRoom;
+	public int totalCardsInRoom;
 
 	[Space(12)]
 
@@ -41,13 +41,13 @@ public class RoomCreator : ScriptableObject {
 
 	public void InitializeRoomValues()
 	{
-		totalCardsInRoom = OneStarCardsInRoom + TwoStarCardsInRoom + ThreeStarCardsInRoom + FourStarCardsInRoom + FiveStarCardsInRoom;
+		totalCardsInRoom = oneStarCardsInRoom + twoStarCardsInRoom + threeStarCardsInRoom + fourStarCardsInRoom + fiveStarCardsInRoom;
 
-		OneStarCardsLeft = OneStarCardsInRoom;
-		TwoStarCardsLeft = TwoStarCardsInRoom;
-		ThreeStarCardsLeft = ThreeStarCardsInRoom;
-		FourStarCardsLeft = FourStarCardsInRoom;
-		FiveStarCardsLeft = FiveStarCardsInRoom;
+		OneStarCardsLeft = oneStarCardsInRoom;
+		TwoStarCardsLeft = twoStarCardsInRoom;
+		ThreeStarCardsLeft = threeStarCardsInRoom;
+		FourStarCardsLeft = fourStarCardsInRoom;
+		FiveStarCardsLeft = fiveStarCardsInRoom;
 
 		indexNumber = new int[totalCardsInRoom];
 		rarity = new int[totalCardsInRoom];
