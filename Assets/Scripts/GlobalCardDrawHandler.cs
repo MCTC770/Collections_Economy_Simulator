@@ -352,6 +352,7 @@ public class GlobalCardDrawHandler : MonoBehaviour
 			}
 
 			csvCreator.SetCurrentDay(j + 1);
+			csvCreator.TrackRoomCompletion();
 			csvCreator.SetSimulationCounter(currentSimulation);
 			csvCreator.CreateCSVString(drawnCardIndex, dailyDrawnCardIndex, true);
 			dailyDrawnCardIndex = new int[dailyDrawnCardIndex.Length];

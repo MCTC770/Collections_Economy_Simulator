@@ -13,6 +13,7 @@ public class CsvCreator : MonoBehaviour
 	[SerializeField] bool dailyLog = false;
 	[SerializeField] bool settingsLog = false;
 	[Space(12)]
+	[SerializeField] bool roomCompletionInfo = false;
 	[SerializeField] bool perCardInfo = false;
 
 	string csvTotal;
@@ -24,6 +25,9 @@ public class CsvCreator : MonoBehaviour
 	int simulationCounter = 0;
 	int duplicateStarCounter = 0;
 
+	int[] roomCompletionTracker;
+	int[] roomCompletionDay;
+
 	HouseCreator houseCreator;
 	GlobalCardDrawHandler globalCardDrawHandler;
 	CardWeightManager cardWeightManager;
@@ -34,9 +38,20 @@ public class CsvCreator : MonoBehaviour
 		currentTime = System.DateTime.Now.ToString();
 		currentTime = currentTime.Replace("/", "-");
 		currentTime = currentTime.Replace(":", "-");
+
 		houseCreator = FindObjectOfType<HouseCreator>();
 		globalCardDrawHandler = FindObjectOfType<GlobalCardDrawHandler>();
 		cardWeightManager = FindObjectOfType<CardWeightManager>();
+
+		roomCompletionTracker = new int[houseCreator.GetRoomsInThisHouse().Length];
+		roomCompletionDay = new int[houseCreator.GetRoomsInThisHouse().Length];
+
+		for (int i = 0; i < roomCompletionTracker.Length; i++)
+		{
+			roomCompletionTracker[i] = 0;
+			roomCompletionDay[i] = 0;
+		}
+
 	}
 
 	// Update is called once per frame
@@ -64,13 +79,25 @@ public class CsvCreator : MonoBehaviour
 			csvTotal += "Total Cards,";
 			csvTotal += "Avg Cards/Day,";
 			csvTotal += "Unique Cards";
+
+			csvTotal += ",";
+
+			for (int i = 0; i < houseCreator.GetRoomsInThisHouse().Length; i++)
+			{
+				csvTotal += "Room " + (i + 1) + " Day";
+				if (i < houseCreator.GetRoomsInThisHouse().Length - 1)
+				{
+					csvTotal += ",";
+				}
+			}
+
 			if (perCardInfo)
 			{
 				csvTotal += ",";
 
 				for (int i = 0; i < houseCreator.houseCardIsCollectedIndex.Length; i++)
 				{
-					csvTotal += "Card" + (i + 1);
+					csvTotal += "Card " + (i + 1);
 					if (i < houseCreator.houseCardIsCollectedIndex.Length - 1)
 					{
 						csvTotal += ",";
@@ -152,6 +179,19 @@ public class CsvCreator : MonoBehaviour
 		}
 		csvTotal += totalUniqueCardsDrawn;
 
+		// Room completion day
+		csvTotal += ",";
+
+		// Tracks collected cards
+		for (int i = 0; i < houseCreator.GetRoomsInThisHouse().Length; i++)
+		{
+			csvTotal += roomCompletionDay[i];
+			if (i < houseCreator.GetRoomsInThisHouse().Length - 1)
+			{
+				csvTotal += ",";
+			}
+		}
+
 		if (perCardInfo)
 		{
 			csvTotal += ",";
@@ -209,7 +249,48 @@ public class CsvCreator : MonoBehaviour
 				}
 			}
 		}
+	}
 
+	public void TrackRoomCompletion()
+	{
+		for (int i = 0; i < houseCreator.GetRoomsInThisHouse().Length; i++)
+		{
+			int totalCardsCollectedInRoom = 0;
+			for (int j = 0; j < houseCreator.GetRoomsInThisHouse()[i].indexNumber.Length; j++)
+			{
+				int[] collectedCardsPerRoomCounter = new int[houseCreator.GetRoomsInThisHouse()[i].indexNumber.Length];
+				int currentIndex = houseCreator.GetRoomsInThisHouse()[i].indexNumber[j];
+				if (houseCreator.houseCardIsCollectedIndex[currentIndex - 1])
+				{
+					collectedCardsPerRoomCounter[j] = 1;
+				}
+				//print(j + " " + collectedCardsPerRoomCounter[j]);
+				for (int k = 0; k < collectedCardsPerRoomCounter.Length; k++)
+				{
+					totalCardsCollectedInRoom += collectedCardsPerRoomCounter[k];
+				}
+				//print("totalCardsCollectedInRoom: " + totalCardsCollectedInRoom);
+			}
+			if (totalCardsCollectedInRoom >= houseCreator.GetRoomsInThisHouse()[i].indexNumber.Length)
+			{
+				if (roomCompletionTracker[i] == 0)
+				{
+					roomCompletionTracker[i] += 1;
+					roomCompletionDay[i] = currentDay;
+					//print("roomCompletionTracker[" + i + "]: " + roomCompletionTracker[i]);
+				}
+			}
+			//print("previousRoomsCompleted: " + previousRoomsCompleted + " countRoomsCompleted: " + countRoomsCompleted);
+		}
+
+		/*int countRoomsCompleted = 0;
+
+		for (int i = 0; i < roomCompletionTracker.Length; i++)
+		{
+			countRoomsCompleted += roomCompletionTracker[i];
+			//print("countRoomsCompleted: " + countRoomsCompleted + " roomCompletionTracker["+i+"]: " + roomCompletionTracker[i]);
+		}
+		//print("countRoomsCompleted After: " + countRoomsCompleted);*/
 	}
 
 	public void CreateCSVFile()

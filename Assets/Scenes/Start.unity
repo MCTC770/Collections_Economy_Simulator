@@ -593,7 +593,7 @@ Prefab:
     - target: {fileID: 114189585712051424, guid: 846978154ab15b84fa59cae4ec610003,
         type: 2}
       propertyPath: perCardInfo
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114189585712051424, guid: 846978154ab15b84fa59cae4ec610003,
         type: 2}
@@ -603,7 +603,7 @@ Prefab:
     - target: {fileID: 114189585712051424, guid: 846978154ab15b84fa59cae4ec610003,
         type: 2}
       propertyPath: dailyLog
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114189585712051424, guid: 846978154ab15b84fa59cae4ec610003,
         type: 2}
@@ -613,7 +613,7 @@ Prefab:
     - target: {fileID: 114189585712051424, guid: 846978154ab15b84fa59cae4ec610003,
         type: 2}
       propertyPath: totalLog
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 846978154ab15b84fa59cae4ec610003, type: 2}

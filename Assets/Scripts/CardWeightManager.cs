@@ -37,12 +37,19 @@ public class CardWeightManager : MonoBehaviour
 	string[] setWeightPerCardArray;
 	string[] initialWeightPerRoomArray;
 	string[] initialWeightPerCardArray;
+	string[] copyTemporaryWeightPerCardArrayStore;
 	GlobalCardDrawHandler globalCardDrawHandler;
 	HouseCreator houseCreator;
 
 	// Use this for initialization
 	void Start()
 	{
+		copyTemporaryWeightPerCardArrayStore = new string[weightPerCardArray.Length];
+		for (int i = 0; i < copyTemporaryWeightPerCardArrayStore.Length; i++)
+		{
+			copyTemporaryWeightPerCardArrayStore[i] = weightPerCardArray[i].ToString();
+		}
+
 		houseCreator = FindObjectOfType<HouseCreator>();
 		globalCardDrawHandler = FindObjectOfType<GlobalCardDrawHandler>();
 		if (!weightPerRoom)
@@ -210,8 +217,8 @@ public class CardWeightManager : MonoBehaviour
 				{
 					CalculateWeightChanceByDayPerCard();
 				}
-				TimeLockRooms();
 			}
+			TimeLockRooms();
 		}
 		else if (weightChangeByProgress)
 		{
@@ -241,10 +248,22 @@ public class CardWeightManager : MonoBehaviour
 	{
 		if (timeLocksEnabled)
 		{
+			/*for (int i = 0; i < weightPerCardArray.Length; i++)
+			{
+				weightPerCardArray[i] = float.Parse(copyTemporaryWeightPerCardArrayStore[i]);
+			}*/
+
 			string[] temporaryWeightPerRoomArrayStore = new string[weightPerRoomArray.Length];
+			string[] temporaryWeightPerCardArrayStore = new string[weightPerCardArray.Length];
+
 			for (int i = 0; i < weightPerRoomArray.Length; i++)
 			{
 				temporaryWeightPerRoomArrayStore[i] = weightPerRoomArray[i].ToString();
+			}
+
+			for (int i = 0; i < weightPerCardArray.Length; i++)
+			{
+				temporaryWeightPerCardArrayStore[i] = weightPerCardArray[i].ToString();
 			}
 
 			for (int i = 0; i < daysUntilRoomUnlock.Length; i++)
@@ -252,6 +271,10 @@ public class CardWeightManager : MonoBehaviour
 				if (daysUntilRoomUnlock[i] - 1 >= currentNumberOfDays)
 				{
 					weightPerRoomArray[i] = 0;
+					for (int j = 0; j < houseCreator.GetRoomsInThisHouse()[i].indexNumber.Length; j++)
+					{
+						weightPerCardArray[houseCreator.GetRoomsInThisHouse()[i].indexNumber[j] - 1] = 0;
+					}
 				}
 			}
 
@@ -260,16 +283,36 @@ public class CardWeightManager : MonoBehaviour
 			{
 				for (int j = 0; j < houseCreator.GetRoomsInThisHouse()[i].weightOfCardsInRoom.Length; j++)
 				{
-					houseCreator.houseCardWeightIndex[cardIndexCounter] = weightPerRoomArray[i];
+					if (weightPerCard)
+					{
+						houseCreator.houseCardWeightIndex[cardIndexCounter] = weightPerCardArray[cardIndexCounter];
+					}
+					else
+					{
+						houseCreator.houseCardWeightIndex[cardIndexCounter] = weightPerRoomArray[i];
+					}
 					cardIndexCounter += 1;
 				}
 			}
 
-			globalCardDrawHandler.SetWeight(weightPerRoomArray);
+			/*if (weightPerCard)
+			{
+				//globalCardDrawHandler.SetWeight(weightPerCardArray);
+			}
+			else
+			{*/
+				globalCardDrawHandler.SetWeight(weightPerRoomArray);
+			//}
 
 			for (int i = 0; i < weightPerRoomArray.Length; i++)
 			{
 				weightPerRoomArray[i] = float.Parse(temporaryWeightPerRoomArrayStore[i]);
+			}
+
+			for (int i = 0; i < weightPerCardArray.Length; i++)
+			{
+				copyTemporaryWeightPerCardArrayStore[i] = weightPerCardArray[i].ToString();
+				weightPerCardArray[i] = float.Parse(temporaryWeightPerCardArrayStore[i]);
 			}
 		}
 	}
@@ -326,7 +369,12 @@ public class CardWeightManager : MonoBehaviour
 				weightPerCardArray[i] = float.Parse(setWeightPerCardArray[shiftCalculator]);
 				//print("currentNumberOfDays: " + currentNumberOfDays + " shiftCalculator: " + shiftCalculator + " weightPerCardArray[" + i + "]: " + weightPerCardArray[i]);
 			}
-			houseCreator.houseCardWeightIndex = weightPerCardArray;
+			//houseCreator.houseCardWeightIndex = weightPerCardArray;
+
+			for (int j = 0; j < houseCreator.houseCardWeightIndex.Length; j++)
+			{
+				houseCreator.houseCardWeightIndex[j] = float.Parse(copyTemporaryWeightPerCardArrayStore[j]);
+			}
 		}
 		//print("---");
 	}
@@ -355,7 +403,11 @@ public class CardWeightManager : MonoBehaviour
 				weightPerCardArray[i] = float.Parse(setWeightPerCardArray[shiftCalculator]);
 				//print("currentNumberOfDays: " + currentNumberOfDays + " shiftStepIterationCounter: " + (shiftStepIterationCounter - 1) + " initialCollectedCardsCounter: " + initialCollectedCardsCounter + " shiftCalculator: " + shiftCalculator + " weightPerCardArray[" + i + "]: " + weightPerCardArray[i]);
 			}
-			houseCreator.houseCardWeightIndex = weightPerCardArray;
+			//houseCreator.houseCardWeightIndex = weightPerCardArray;
+			for (int j = 0; j < houseCreator.houseCardWeightIndex.Length; j++)
+			{
+				houseCreator.houseCardWeightIndex[j] = float.Parse(copyTemporaryWeightPerCardArrayStore[j]);
+			}
 			//print("---");
 		}
 	}
