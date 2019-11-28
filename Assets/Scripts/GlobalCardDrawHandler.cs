@@ -8,7 +8,7 @@ public class GlobalCardDrawHandler : MonoBehaviour
 	[SerializeField] int numberOfSimulations;
 	[SerializeField] int numberOfDays;
 	[Space(12)]
-	[SerializeField] bool relativeRarity;
+	[SerializeField] bool relativeRarity = true;
 	[SerializeField] float[] setCardRarities = new float[5];
 	[SerializeField] float[] packsPerDay = new float[5];
 	[SerializeField] PackCreator[] packSelection;
@@ -501,6 +501,8 @@ public class GlobalCardDrawHandler : MonoBehaviour
 		returnedTXT += "numberOfSimulations: " + numberOfSimulations;
 		returnedTXT += System.Environment.NewLine;
 		returnedTXT += "numberOfDays: " + numberOfDays;
+		returnedTXT += System.Environment.NewLine;
+		returnedTXT += "relativeRarity: " + relativeRarity;
 		returnedTXT += System.Environment.NewLine;
 		returnedTXT += "setCardRarities: ";
 		returnedTXT += System.Environment.NewLine;

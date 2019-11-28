@@ -84,6 +84,7 @@
     <Compile Include="Assets\UnityLitJson\Platform.cs" />
     <Compile Include="Assets\UnityLitJson\Unity\UnityTypeBindings.cs" />
     <Compile Include="Assets\UnityLitJson-Example\JsonExample.cs" />
+    <None Include="Assets\CSVs\SettingsLog - 11-28-2019 2-06-46 AM.txt" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/mc-tc/Documents/repos/Unity/Collections_Economy_Simulator/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
