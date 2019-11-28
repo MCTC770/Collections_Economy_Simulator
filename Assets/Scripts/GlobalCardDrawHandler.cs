@@ -8,6 +8,7 @@ public class GlobalCardDrawHandler : MonoBehaviour
 	[SerializeField] int numberOfSimulations;
 	[SerializeField] int numberOfDays;
 	[Space(12)]
+	[SerializeField] bool relativeRarity;
 	[SerializeField] float[] setCardRarities = new float[5];
 	[SerializeField] float[] packsPerDay = new float[5];
 	[SerializeField] PackCreator[] packSelection;
@@ -445,12 +446,31 @@ public class GlobalCardDrawHandler : MonoBehaviour
 	void DrawChancePerMinimumCardRarity(int rarity)
 	{
 		GetCardValues();
-		for (int k = 0; k < setCardRarities.Length; k++)
+
+		if (relativeRarity)
 		{
-			if (rarity > k)
+			for (int k = 0; k < setCardRarities.Length; k++)
 			{
-				setCardRarities[k] = 0;
+				if (rarity > k)
+				{
+					setCardRarities[k] = 0;
+				}
 			}
+		}
+		else
+		{
+			float accumulatedRarity = 0;
+
+			for (int k = 0; k < setCardRarities.Length; k++)
+			{
+				if (rarity >= k)
+				{
+					accumulatedRarity += setCardRarities[k];
+					setCardRarities[k] = 0;
+				}
+			}
+
+			setCardRarities[rarity] = accumulatedRarity;
 		}
 
 		cardDrawer.SetCardRarities(setCardRarities[0], setCardRarities[1], setCardRarities[2], setCardRarities[3], setCardRarities[4]);

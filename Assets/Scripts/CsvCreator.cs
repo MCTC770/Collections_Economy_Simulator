@@ -80,14 +80,17 @@ public class CsvCreator : MonoBehaviour
 			csvTotal += "Avg Cards/Day,";
 			csvTotal += "Unique Cards";
 
-			csvTotal += ",";
-
-			for (int i = 0; i < houseCreator.GetRoomsInThisHouse().Length; i++)
+			if (roomCompletionInfo)
 			{
-				csvTotal += "Room " + (i + 1) + " Day";
-				if (i < houseCreator.GetRoomsInThisHouse().Length - 1)
+				csvTotal += ",";
+
+				for (int i = 0; i < houseCreator.GetRoomsInThisHouse().Length; i++)
 				{
-					csvTotal += ",";
+					csvTotal += "Room " + (i + 1) + " Day";
+					if (i < houseCreator.GetRoomsInThisHouse().Length - 1)
+					{
+						csvTotal += ",";
+					}
 				}
 			}
 
@@ -111,6 +114,22 @@ public class CsvCreator : MonoBehaviour
 			csvDaily += "Days,";
 			csvDaily += "Duplicate Stars,";
 			csvDaily += "Daily Cards";
+
+			if (roomCompletionInfo)
+			{
+				csvDaily += ",";
+
+				for (int i = 0; i < houseCreator.GetRoomsInThisHouse().Length; i++)
+				{
+					csvDaily += "Room " + (i + 1) + " Day";
+					if (i < houseCreator.GetRoomsInThisHouse().Length - 1)
+					{
+						csvDaily += ",";
+					}
+				}
+			}
+
+
 			if (perCardInfo)
 			{
 				csvDaily += ",";
@@ -179,16 +198,18 @@ public class CsvCreator : MonoBehaviour
 		}
 		csvTotal += totalUniqueCardsDrawn;
 
-		// Room completion day
-		csvTotal += ",";
-
-		// Tracks collected cards
-		for (int i = 0; i < houseCreator.GetRoomsInThisHouse().Length; i++)
+		if (roomCompletionInfo)
 		{
-			csvTotal += roomCompletionDay[i];
-			if (i < houseCreator.GetRoomsInThisHouse().Length - 1)
+			// Room completion day
+			csvTotal += ",";
+
+			for (int i = 0; i < houseCreator.GetRoomsInThisHouse().Length; i++)
 			{
-				csvTotal += ",";
+				csvTotal += roomCompletionDay[i];
+				if (i < houseCreator.GetRoomsInThisHouse().Length - 1)
+				{
+					csvTotal += ",";
+				}
 			}
 		}
 
@@ -228,6 +249,21 @@ public class CsvCreator : MonoBehaviour
 			totalDrawnCards += drawnCardIndexDaily[i];
 		}
 		csvDaily += totalDrawnCards;
+
+		if (roomCompletionInfo)
+		{
+			csvDaily += ",";
+
+			// Room completion day
+			for (int i = 0; i < houseCreator.GetRoomsInThisHouse().Length; i++)
+			{
+				csvDaily += roomCompletionDay[i];
+				if (i < houseCreator.GetRoomsInThisHouse().Length - 1)
+				{
+					csvDaily += ",";
+				}
+			}
+		}
 
 		if (perCardInfo)
 		{
